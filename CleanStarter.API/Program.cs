@@ -1,0 +1,80 @@
+﻿using CleanStarter.api.Extensions;
+using CleanStarter.api.Factories;
+using CleanStarter.api.Middlewares;
+using CleanStarter.API.Extensions;
+using CleanStarter.Application.Common;
+using CleanStarter.Application.Extensions;
+using CleanStarter.Infrastructure.Extensions;
+using Scalar.AspNetCore;
+using Serilog;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+
+SerilogExtension.SetupBootstrapLogger();
+
+try
+{
+    Log.Information("Starting Web Application...");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.RegisterSerilog();
+    builder.Services.AddGlobalRateLimiter();
+    builder.Services.AddGlobalCors(builder.Configuration);
+    builder.Services.AddGlobalHealthChecks(builder.Configuration);
+    builder.Services.AddApiResponseCompression();
+
+
+    builder.Services.AddOpenApi();
+    builder.Services.AddEndpointsApiExplorer();
+
+    builder.Services.AddInfrastructureService(builder.Configuration);
+    builder.Services.AddApplicationServices();
+    builder.Services.AddFluentValidationAutoValidation(config =>
+    config.OverrideDefaultResultFactoryWith<CustomResultFactory>());
+
+    builder.Services.AddApiVersion();
+
+    builder.Services.AddControllers(options =>
+    {
+        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    });
+
+    var app = builder.Build();
+
+    
+    app.UseSerilogRequestLogging();
+
+    app.UseMiddleware<GlobalErrorHandlerMiddleware>();
+
+    app.UseResponseCompression();
+    if (app.Environment.IsDevelopment()
+   && app.Configuration.GetValue<bool>("EnableScalar"))
+    {
+        app.MapOpenApi();
+        app.MapScalarApiReference();
+        app.UseCors("AllowAll");
+    }
+    else
+    {
+        app.UseCors("Production");
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseSecurityHeaders(PolicyCollection.policyCollection(app));
+    app.UseGlobalHealthChecks();
+    app.UseRateLimiter();
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.MapControllers().RequireRateLimiting("IpLimiter");
+
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
