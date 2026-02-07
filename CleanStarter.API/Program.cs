@@ -5,6 +5,7 @@ using CleanStarter.API.Extensions;
 using CleanStarter.Application.Common;
 using CleanStarter.Application.Extensions;
 using CleanStarter.Infrastructure.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Serilog;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -41,7 +42,24 @@ try
 
     var app = builder.Build();
 
-    
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<CleanStarter.Infrastructure.Data.AppDbContext>();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error While Create Database");
+        }
+    }
+
+
     app.UseSerilogRequestLogging();
 
     app.UseMiddleware<GlobalErrorHandlerMiddleware>();
