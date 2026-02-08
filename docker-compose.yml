@@ -1,39 +1,34 @@
 services:
-  # 1. خدمة الـ API
   api:
     build: .
     container_name: cleanstarter-api
     ports:
-      - "5000:8080" # رابط خارجي 5000 -> داخلي 8080
+      - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - EnableScalar=true
-      # هنا السر! نستخدم اسم خدمة الداتابيس (db) بدلاً من localhost
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CleanStarterDb;Username=postgres;Password=mustafa0aqel
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CleanStarterDb;Username=postgres;Password=yourdbpassword
     depends_on:
       - db
     networks:
       - clean-network
 
-  # 2. خدمة قاعدة البيانات (Postgres)
   db:
     image: postgres:16-alpine
     container_name: cleanstarter-db
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=mustafa0aqel
+      - POSTGRES_PASSWORD=yourdbpassword
       - POSTGRES_DB=CleanStarterDb
     ports:
-      - "5432:5432" # لكي تستطيع الاتصال بها من جهازك أيضاً
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data # لحفظ البيانات حتى لو حذفت الحاوية
+      - postgres_data:/var/lib/postgresql/data 
     networks:
       - clean-network
 
-# تعريف وحدة تخزين البيانات
 volumes:
   postgres_data:
 
-# تعريف الشبكة الداخلية
 networks:
   clean-network:
