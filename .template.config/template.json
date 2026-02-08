@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Mustafa Aqel",
+  "classifications": [ "Web", "WebAPI", "Clean Architecture" ],
+  "name": "Clean Architecture Starter",
+  "identity": "CleanStarter.Template",
+  "shortName": "cleanstarter",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "CleanStarter",
+  "preferNameDirectory": true
+}
