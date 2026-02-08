@@ -65,6 +65,7 @@ try
     app.UseMiddleware<GlobalErrorHandlerMiddleware>();
 
     app.UseResponseCompression();
+
     if (app.Environment.IsDevelopment()
    && app.Configuration.GetValue<bool>("EnableScalar"))
     {
