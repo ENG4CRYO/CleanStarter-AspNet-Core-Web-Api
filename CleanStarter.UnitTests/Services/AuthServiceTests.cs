@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
+using Castle.Core.Logging;
 
 namespace CleanStarter.UnitTests.Services
 {
@@ -23,9 +24,11 @@ namespace CleanStarter.UnitTests.Services
     {
         private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
         private readonly Mock<IOptions<JWT>> _mockJwtOptions;
-        private readonly IMapper _realMapper;
         private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly Mock<IGenericRepository<RefreshToken>> _mockRefreshTokenRepo;
+
+       
+        private readonly Mock<IMapper> _mockMapper;
 
         private readonly AuthService _authService;
 
@@ -36,9 +39,24 @@ namespace CleanStarter.UnitTests.Services
             _mockConfiguration = new Mock<IConfiguration>();
             _mockRefreshTokenRepo = new Mock<IGenericRepository<RefreshToken>>();
 
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AuthProfile>());
-            _realMapper = config.CreateMapper();
 
+            _mockMapper = new Mock<IMapper>();
+
+
+            _mockMapper.Setup(m => m.Map<ApplicationUser>(It.IsAny<RegisterModel>()))
+                .Returns((RegisterModel src) => new ApplicationUser
+                {
+                    Email = src.Email,
+                    UserName = src.UserName,
+                    FullName = src.FullName
+                });
+  
+            _mockMapper.Setup(m => m.Map<AuthModel>(It.IsAny<ApplicationUser>()))
+                .Returns(new AuthModel());
+
+
+            _mockMapper.Setup(m => m.Map<AuthModel>(It.IsAny<object>()))
+                .Returns(new AuthModel());
 
             _mockJwtOptions.Setup(x => x.Value).Returns(new JWT
             {
@@ -51,7 +69,7 @@ namespace CleanStarter.UnitTests.Services
             _authService = new AuthService(
                 _mockUserManager.Object,
                 _mockJwtOptions.Object,
-                _realMapper,
+                _mockMapper.Object,
                 _mockConfiguration.Object,
                 _mockRefreshTokenRepo.Object
             );

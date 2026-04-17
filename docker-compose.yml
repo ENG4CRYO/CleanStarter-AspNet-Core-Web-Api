@@ -1,34 +1,17 @@
 services:
   api:
-    build: .
+    # الخيار 1: إذا رفعت الصورة على Docker Hub (أنصح به)
+    image: engcryo/cleanstarter-api:v1
+
+    # الخيار 2: إذا نقلت ملفات الكود للسيرفر وتريد البناء هناك (احذف السطر فوق وفعل هذا)
+    # build: .
+
     container_name: cleanstarter-api
+    restart: always
     ports:
-      - "5000:8080"
+      - "80:8080"  # يربط بورت 80 في السيرفر ببورت 8080 في التطبيق
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - EnableScalar=true
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CleanStarterDb;Username=postgres;Password=yourdbpassword
-    depends_on:
-      - db
-    networks:
-      - clean-network
-
-  db:
-    image: postgres:16-alpine
-    container_name: cleanstarter-db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=yourdbpassword
-      - POSTGRES_DB=CleanStarterDb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data 
-    networks:
-      - clean-network
-
-volumes:
-  postgres_data:
-
-networks:
-  clean-network:
+      # هنا السحر: ضع الـ Private IP الخاص بالسيرفر الأول (A)
+      - ConnectionStrings__DefaultConnection=Host=10.0.0.84;Port=5432;Database=TestDb;Username=Cryo;Password=Cryo4Cryo@123

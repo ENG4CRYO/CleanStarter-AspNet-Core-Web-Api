@@ -28,14 +28,15 @@ namespace CleanStarter.Application.Services
         IOptions<JWT> jwt,
         IMapper mapper,
         IConfiguration configuration,
-        IGenericRepository<RefreshToken> refreshTokenRepo
+        IGenericRepository<RefreshToken> refreshTokenRepo,
+        TokenHelper tokenHelper
         )
         {
             _userManager = userManager;
             _jwt = jwt.Value;
             _mapper = mapper;       
             _configuration = configuration;
-            _tokenHelper = new TokenHelper(_jwt, _userManager);
+            _tokenHelper = tokenHelper;
             _refreshTokenRepo = refreshTokenRepo;
 
         }

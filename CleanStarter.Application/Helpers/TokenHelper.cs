@@ -2,6 +2,7 @@
 using CleanStarter.Core.Entites;
 using CleanStarter.Core.Entites.AuthEntites;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,9 @@ namespace CleanStarter.Application.Helpers
     {
         private readonly JWT _jwt;
         private readonly UserManager<ApplicationUser> _userManager;
-        public TokenHelper(JWT jwt, UserManager<ApplicationUser> userManager)
+        public TokenHelper(IOptions<JWT> jwt, UserManager<ApplicationUser> userManager)
         {
-            _jwt = jwt;
+            _jwt = jwt.Value;
             _userManager = userManager;
         }
         public async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)

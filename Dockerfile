@@ -9,22 +9,13 @@ COPY ["CleanStarter.Infrastructure/CleanStarter.Infrastructure.csproj", "CleanSt
 
 
 RUN dotnet restore "CleanStarter.API/CleanStarter.API.csproj"
-
+# نسخ باقي الكود وبناء المشروع
 COPY . .
 WORKDIR "/src/CleanStarter.API"
-RUN dotnet build "CleanStarter.API.csproj" -c Release -o /app/build
+RUN dotnet publish -c Release -o /app/publish
 
-FROM build AS publish
-RUN dotnet publish "CleanStarter.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
+# صورة التشغيل (Runtime) - بسيطة وسريعة
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-
-ENV ASPNETCORE_ENVIRONMENT=Development
-ENV EnableScalar=true
-
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "CleanStarter.API.dll"]
