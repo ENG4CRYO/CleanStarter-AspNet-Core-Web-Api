@@ -1,4 +1,7 @@
 ﻿using CleanStarter.Application.Interfaces;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
 using CleanStarter.Core.Entites;
 using CleanStarter.Core.Entites.AuthEntites;
 using Microsoft.AspNetCore.Identity;
@@ -17,10 +20,20 @@ namespace CleanStarter.Application.Helpers
     {
         private readonly JWT _jwt;
         private readonly UserManager<ApplicationUser> _userManager;
-        public TokenHelper(IOptions<JWT> jwt, UserManager<ApplicationUser> userManager)
+        private readonly IGenericReadRepository<RefreshToken, int> _refreshTokenReadRepo;
+        private readonly IGenericWriteRepository<RefreshToken, int> _refreshTokenWriteRepo;
+        private readonly IUnitOfWork _unitOfWork;
+        public TokenHelper(IOptions<JWT> jwt,
+            UserManager<ApplicationUser> userManager,
+            IGenericReadRepository <RefreshToken,int> refreshTokenReadRepo,
+            IGenericWriteRepository <RefreshToken,int> refreshTokenWriteRepo,
+            IUnitOfWork unitOfWork)
         {
             _jwt = jwt.Value;
             _userManager = userManager;
+            _refreshTokenReadRepo = refreshTokenReadRepo;
+            _refreshTokenWriteRepo = refreshTokenWriteRepo;
+            _unitOfWork = unitOfWork;
         }
         public async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
         {
@@ -74,18 +87,19 @@ namespace CleanStarter.Application.Helpers
 
         }
 
-        public async Task ManageUserTokensAsync(IGenericRepository<RefreshToken> _refreshTokenRepo, string userId)
+        public async Task ManageUserTokensAsync(string userId)
         {
-            var expiredTokens = await _refreshTokenRepo.ListAsync(t => t.UserId == userId && t.Expires <= DateTime.UtcNow)
+            var expiredTokens = await _refreshTokenReadRepo.ListAsync(t => t.UserId == userId && t.Expires <= DateTime.UtcNow)
                 ?? Enumerable.Empty<RefreshToken>(); ;
             if (expiredTokens.Any())
             {
-                await _refreshTokenRepo.DeleteRangeAsync(expiredTokens);
+                await _refreshTokenWriteRepo.DeleteRangeAsync(expiredTokens);
+                await _unitOfWork.SaveChangesAsync();
             }
 
             const int MaxActiveSessions = 5;
 
-            var activeTokens = await _refreshTokenRepo.ListAsync(t =>
+            var activeTokens = await _refreshTokenReadRepo.ListAsync(t =>
                 t.UserId == userId && t.Revoked == null && t.Expires > DateTime.UtcNow);
 
             if (activeTokens.Count >= MaxActiveSessions)
@@ -102,7 +116,8 @@ namespace CleanStarter.Application.Helpers
                 {
                     token.Revoked = DateTime.UtcNow;
                     token.ReasonRevoked = "Exceeded max active sessions";
-                    await _refreshTokenRepo.UpdateAsync(token);
+                    await _refreshTokenWriteRepo.UpdateAsync(token);
+                    await _unitOfWork.SaveChangesAsync();
                 }
             }
         }

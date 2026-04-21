@@ -10,5 +10,35 @@
     "type": "project"
   },
   "sourceName": "CleanStarter",
-  "preferNameDirectory": true
+  "preferNameDirectory": true,
+  "symbols": {
+    "ArchitecturePattern": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "Repository",
+          "description": "Use Unit of Work and Read/Write Repositories"
+        },
+        {
+          "choice": "CQRS",
+          "description": "Use CQRS pattern with MediatR"
+        }
+      ],
+      "defaultValue": "Repository",
+      "description": "Choose the data access architecture pattern."
+    },
+    "UseOTP": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "description": "Include OTP based Authentication."
+    },
+    "UseFirebaseAppCheck": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "description": "Include Firebase App Check Middleware."
+    }
+  }
 }

@@ -1,8 +1,12 @@
 ﻿using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
 using CleanStarter.Core.Entites;
 using CleanStarter.Infrastructure.Data;
 using CleanStarter.Infrastructure.Repositories;
+using CleanStarter.Infrastructure.Repositories.Read;
+using CleanStarter.Infrastructure.Repositories.Write;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +39,10 @@ namespace CleanStarter.Infrastructure.Extensions
                 b.MigrationsAssembly(typeof(InfrastructureServiceCollectionExtensions).Assembly.FullName)
                 ));
 
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IGenericReadRepository<,>), typeof(GenericReadRepository<,>));
+            services.AddScoped(typeof(IGenericWriteRepository<,>), typeof(GenericWriteRepository<,>));
+
+
             services.Configure<JWT>(configuration.GetSection("JWT"));
             services.AddAuthentication(options =>
             {

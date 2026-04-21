@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CleanStarter.Core.Entities.BaseEntity;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CleanStarter.Core.Entites.AuthEntites
 {
-    public class RefreshToken
+    public class RefreshToken : IEntity<int>
     {
         public int Id { get; set; }
         public string Token { get; set; } = string.Empty;

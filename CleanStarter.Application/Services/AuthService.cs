@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using CleanStarter.Core.Entites.AuthEntites;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces;
 
 namespace CleanStarter.Application.Services
 {
@@ -22,13 +25,17 @@ namespace CleanStarter.Application.Services
         private readonly JWT _jwt;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly IGenericRepository<RefreshToken> _refreshTokenRepo;
+        private readonly IGenericReadRepository<RefreshToken, int> _refreshTokenReadRepo;
+        private readonly IGenericWriteRepository<RefreshToken, int> _refreshTokenWriteRepo; 
+        private readonly IUnitOfWork _unitOfWork;
 
         public AuthService(UserManager<ApplicationUser> userManager,
         IOptions<JWT> jwt,
         IMapper mapper,
         IConfiguration configuration,
-        IGenericRepository<RefreshToken> refreshTokenRepo,
+        IGenericReadRepository<RefreshToken, int> refreshTokenReadRepo,
+        IGenericWriteRepository<RefreshToken, int> refreshTokenWriteRepo,
+        IUnitOfWork unitOfWork,
         TokenHelper tokenHelper
         )
         {
@@ -37,7 +44,9 @@ namespace CleanStarter.Application.Services
             _mapper = mapper;       
             _configuration = configuration;
             _tokenHelper = tokenHelper;
-            _refreshTokenRepo = refreshTokenRepo;
+            _refreshTokenReadRepo = refreshTokenReadRepo;
+            _refreshTokenWriteRepo = refreshTokenWriteRepo;
+            _unitOfWork = unitOfWork;
 
         }
 
@@ -57,11 +66,13 @@ namespace CleanStarter.Application.Services
             var tokenString = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
 
-            await _tokenHelper.ManageUserTokensAsync(_refreshTokenRepo,user.Id);
+            await _tokenHelper.ManageUserTokensAsync(user.Id);
             var refreshToken = _tokenHelper.GenerateRefreshToken();
             refreshToken.UserId = user.Id;
 
-            await _refreshTokenRepo.AddAsync(refreshToken);
+            await _refreshTokenWriteRepo.AddAsync(refreshToken);
+            await _unitOfWork.SaveChangesAsync();
+
 
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -113,7 +124,8 @@ namespace CleanStarter.Application.Services
 
             var newRefreshToken = _tokenHelper.GenerateRefreshToken();  
             newRefreshToken.UserId = newUser.Id;
-            await _refreshTokenRepo.AddAsync(newRefreshToken);
+            await _refreshTokenWriteRepo.AddAsync(newRefreshToken);
+            await _unitOfWork.SaveChangesAsync();
 
             var token = await _tokenHelper.CreateJwtToken(newUser);
 
@@ -132,9 +144,7 @@ namespace CleanStarter.Application.Services
 
         public async Task<ApiResponse<AuthModel>> RefreshTokenAsync(string refreshToken)
         {
-         
-            var storedToken = await _refreshTokenRepo.GetAsync(t => t.Token == refreshToken);
-
+            var storedToken = await _refreshTokenReadRepo.GetAsync(t => t.Token == refreshToken);
    
             if (storedToken == null)
                 return ApiResponse<AuthModel>.Failure("Invalid refresh token");
@@ -150,7 +160,7 @@ namespace CleanStarter.Application.Services
             if (!storedToken.IsActive)
                 return ApiResponse<AuthModel>.Failure("Refresh token expired");
 
-            await _tokenHelper.ManageUserTokensAsync(_refreshTokenRepo, user.Id);
+            await _tokenHelper.ManageUserTokensAsync(user.Id);
             var newRefreshToken = _tokenHelper.GenerateRefreshToken();
             newRefreshToken.UserId = user.Id;
 
@@ -160,8 +170,8 @@ namespace CleanStarter.Application.Services
             storedToken.ReplacedByToken = newRefreshToken.Token;
 
 
-            await _refreshTokenRepo.UpdateAsync(storedToken);
-            await _refreshTokenRepo.AddAsync(newRefreshToken);
+            await _refreshTokenWriteRepo.UpdateAsync(storedToken);
+            await _refreshTokenWriteRepo.AddAsync(newRefreshToken);
 
             var jwtSecurityToken = await _tokenHelper.CreateJwtToken(user);
 
@@ -179,7 +189,7 @@ namespace CleanStarter.Application.Services
         public async Task<ApiResponse<bool>> RevokeTokenAsync(string token)
         {
 
-            var storedToken = await _refreshTokenRepo.GetAsync(t => t.Token == token);
+            var storedToken = await _refreshTokenReadRepo.GetAsync(t => t.Token == token);
 
        
             if (storedToken == null)
@@ -190,7 +200,7 @@ namespace CleanStarter.Application.Services
                 storedToken.Revoked = DateTime.UtcNow;
                 storedToken.ReasonRevoked = "Revoked manually by user (Logout)";
 
-                await _refreshTokenRepo.UpdateAsync(storedToken);
+                await _refreshTokenWriteRepo.UpdateAsync(storedToken);
             }
 
             return ApiResponse<bool>.Success(true);
