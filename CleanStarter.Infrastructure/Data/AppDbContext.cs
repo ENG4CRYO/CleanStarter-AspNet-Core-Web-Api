@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CleanStarter.Core.Entites;
+using CleanStarter.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using CleanStarter.Core.Entites.AuthEntites;
+using CleanStarter.Core.Entities.AuthEntites;
 
 namespace CleanStarter.Infrastructure.Data
 {

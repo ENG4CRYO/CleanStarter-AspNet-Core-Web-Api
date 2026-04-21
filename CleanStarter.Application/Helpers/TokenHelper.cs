@@ -2,8 +2,8 @@
 using CleanStarter.Application.Interfaces.RepositoryInterfaces;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
-using CleanStarter.Core.Entites;
-using CleanStarter.Core.Entites.AuthEntites;
+using CleanStarter.Core.Entities;
+using CleanStarter.Core.Entities.AuthEntites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

@@ -1,10 +1,10 @@
-﻿using CleanStarter.Core.Entites.AuthEntites;
+﻿using CleanStarter.Core.Entities.AuthEntites;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CleanStarter.Core.Entites
+namespace CleanStarter.Core.Entities
 {
     public class ApplicationUser : IdentityUser
     {

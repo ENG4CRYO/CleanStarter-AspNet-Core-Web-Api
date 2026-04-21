@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CleanStarter.Core.Entites.AuthEntites
+namespace CleanStarter.Core.Entities.AuthEntites
 {
     public class RefreshToken : IEntity<int>
     {

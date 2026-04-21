@@ -1,8 +1,9 @@
 ﻿using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces;
+using CleanStarter.Application.Interfaces.RepositoryInterfaces;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
-using CleanStarter.Core.Entites;
+using CleanStarter.Core.Entities;
 using CleanStarter.Infrastructure.Data;
 using CleanStarter.Infrastructure.Repositories;
 using CleanStarter.Infrastructure.Repositories.Read;
@@ -41,6 +42,7 @@ namespace CleanStarter.Infrastructure.Extensions
 
             services.AddScoped(typeof(IGenericReadRepository<,>), typeof(GenericReadRepository<,>));
             services.AddScoped(typeof(IGenericWriteRepository<,>), typeof(GenericWriteRepository<,>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
             services.Configure<JWT>(configuration.GetSection("JWT"));

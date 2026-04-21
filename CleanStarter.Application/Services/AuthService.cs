@@ -2,7 +2,7 @@
 using CleanStarter.Application.Common;
 using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces;
-using CleanStarter.Core.Entites;
+using CleanStarter.Core.Entities;
 using CleanStarter.Application.Dtos.AuthModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using CleanStarter.Core.Entites.AuthEntites;
+using CleanStarter.Core.Entities.AuthEntites;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces;

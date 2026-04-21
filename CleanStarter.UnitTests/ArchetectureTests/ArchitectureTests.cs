@@ -1,6 +1,6 @@
 ﻿using CleanStarter.API.Controllers.V1;
 using CleanStarter.Application.Services;
-using CleanStarter.Core.Entites;
+using CleanStarter.Core.Entities;
 using CleanStarter.Infrastructure.Data;
 using FluentAssertions;
 using NetArchTest.Rules;
