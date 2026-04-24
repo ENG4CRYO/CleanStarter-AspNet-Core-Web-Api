@@ -31,4 +31,9 @@
     <ProjectReference Include="..\CleanStarter.Core\CleanStarter.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Cashing\" />
+    <Folder Include="BackgroundJobs\" />
+  </ItemGroup>
+
 </Project>

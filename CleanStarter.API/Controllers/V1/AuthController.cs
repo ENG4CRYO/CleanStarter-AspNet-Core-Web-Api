@@ -1,7 +1,11 @@
 ﻿using Asp.Versioning;
+using CleanStarter.api.Factories;
 using CleanStarter.Application.Common;
 using CleanStarter.Application.Dtos.AuthModel;
+using CleanStarter.Application.Features.Auth.Commands.Register;
+using CleanStarter.Application.Features.Auth.Queries.Login;
 using CleanStarter.Application.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanStarter.API.Controllers.V1
@@ -12,10 +16,12 @@ namespace CleanStarter.API.Controllers.V1
     public class AuthController : ControllerBase 
     {
         private readonly IAuthService _authService;
+        private readonly IMediator _mediator;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IMediator mediator)
         {
             _authService = authService;
+            _mediator = mediator;   
         }
 
         [HttpPost("register")]
@@ -24,12 +30,15 @@ namespace CleanStarter.API.Controllers.V1
         [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var result = await _authService.RegisterAsync(model);
+#if IsCQRS
+            var response = await _mediator.Send(new RegisterCommand(model));
+#elif IsRepository
+            var response = await _authService.RegisterAsync(model);
+#endif
+            if (!response.Succeeded)
+                return BadRequest(response);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
-
-            return Ok(result);
+            return Ok(response);
         }
 
         [HttpPost("login")]
@@ -38,12 +47,16 @@ namespace CleanStarter.API.Controllers.V1
         [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] TokenRequestModel model)
         {
-            var result = await _authService.GetTokenAsync(model);
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+#if IsCQRS
+            var response = await _mediator.Send(new LoginQuery(model));
+#elif IsRepository
+            var response = await _authService.GetTokenAsync(model);
+#endif
+            if (!response.Succeeded)
+                return BadRequest(response);
 
-            return Ok(result);
+            return Ok(response);
         }
 
 

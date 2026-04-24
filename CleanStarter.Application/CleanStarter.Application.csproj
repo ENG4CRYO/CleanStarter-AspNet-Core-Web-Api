@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Auth\Commands\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>
