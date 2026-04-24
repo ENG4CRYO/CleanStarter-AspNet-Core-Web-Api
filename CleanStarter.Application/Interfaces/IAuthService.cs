@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+#if IsRepository
 namespace CleanStarter.Application.Interfaces
 {
     public interface IAuthService
@@ -14,3 +15,4 @@ namespace CleanStarter.Application.Interfaces
         Task<ApiResponse<bool>> RevokeTokenAsync(string token);
     }
 }
+#endif

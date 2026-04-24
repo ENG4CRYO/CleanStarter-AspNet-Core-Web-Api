@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Text;
 
+#if IsRepository
 namespace CleanStarter.Infrastructure.Repositories.Read
 {
     public class GenericReadRepository<T, TId> : IGenericReadRepository<T, TId> where T : class, IEntity<TId>
@@ -41,3 +42,4 @@ namespace CleanStarter.Infrastructure.Repositories.Read
         }
     }
 }
+#endif

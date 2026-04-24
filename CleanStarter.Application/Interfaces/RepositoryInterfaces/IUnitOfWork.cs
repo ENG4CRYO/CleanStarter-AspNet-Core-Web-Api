@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+#if IsRepository
 namespace CleanStarter.Application.Interfaces.RepositoryInterfaces
 {
     public interface IUnitOfWork : IDisposable
@@ -12,3 +13,4 @@ namespace CleanStarter.Application.Interfaces.RepositoryInterfaces
         Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
     }
 }
+#endif

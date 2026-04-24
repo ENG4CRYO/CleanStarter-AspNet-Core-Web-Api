@@ -1,4 +1,5 @@
 ﻿using CleanStarter.Application.Interfaces;
+using CleanStarter.Application.Interfaces.Helpers;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
@@ -16,7 +17,7 @@ using System.Text;
 
 namespace CleanStarter.Application.Helpers
 {
-    public class TokenHelper
+    public class TokenHelper : ITokenHelper
     {
         private readonly JWT _jwt;
         private readonly UserManager<ApplicationUser> _userManager;

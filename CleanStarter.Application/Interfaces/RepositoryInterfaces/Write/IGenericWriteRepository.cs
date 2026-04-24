@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-#if (ArchitecturePattern == Repository)
+#if IsRepository
 namespace CleanStarter.Application.Interfaces.RepositoryInterfaces.Write
 {
     public interface IGenericWriteRepository<T, TId> where T : class

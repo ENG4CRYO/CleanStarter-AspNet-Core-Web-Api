@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
-using FluentValidation;
+using CleanStarter.Application.Common.Behaviors;
 using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces;
 using CleanStarter.Application.Profiles;
 using CleanStarter.Application.Services;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace CleanStarter.Application.Extensions
@@ -19,6 +21,17 @@ namespace CleanStarter.Application.Extensions
             services.AddScoped<JWT>();
             services.AddScoped<TokenHelper>();
             services.AddAutoMapper(cfg => cfg.AddProfile<AuthProfile>());
+
+#if IsCQRS
+            services.AddMediatR(cfg => {
+                cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+
+  
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+#endif
 
             services.AddValidatorsFromAssembly(typeof(ApplicationServiceCollectionExtensions).Assembly);
 

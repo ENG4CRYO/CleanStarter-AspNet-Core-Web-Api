@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+#if IsRepository
 namespace CleanStarter.Infrastructure.Repositories
 {
     using Microsoft.EntityFrameworkCore.Storage;
@@ -72,3 +73,4 @@ namespace CleanStarter.Infrastructure.Repositories
         }
     }
 }
+#endif

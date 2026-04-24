@@ -51,6 +51,9 @@
   },
   "sources": [
     {
+      "exclude": [
+        "**/Directory.Build.props"
+      ],
       "modifiers": [
         {
           "condition": "(!IsRepository)",

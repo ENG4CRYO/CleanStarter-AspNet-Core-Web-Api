@@ -15,12 +15,15 @@ using CleanStarter.Core.Entities.AuthEntites;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces;
+using CleanStarter.Application.Interfaces.Helpers;
 
+
+#if IsRepository
 namespace CleanStarter.Application.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly TokenHelper _tokenHelper;
+        private readonly ITokenHelper _tokenHelper;
         private readonly IConfiguration _configuration;
         private readonly JWT _jwt;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -36,7 +39,7 @@ namespace CleanStarter.Application.Services
         IGenericReadRepository<RefreshToken, int> refreshTokenReadRepo,
         IGenericWriteRepository<RefreshToken, int> refreshTokenWriteRepo,
         IUnitOfWork unitOfWork,
-        TokenHelper tokenHelper
+        ITokenHelper tokenHelper
         )
         {
             _userManager = userManager;
@@ -209,3 +212,4 @@ namespace CleanStarter.Application.Services
 
     }
 }
+#endif

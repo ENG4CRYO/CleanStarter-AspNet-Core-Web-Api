@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-
+#if IsRepository
 namespace CleanStarter.Infrastructure.Repositories.Write
 {
     public class GenericWriteRepository<T, TId> : IGenericWriteRepository<T, TId> where T : class
@@ -46,3 +46,4 @@ namespace CleanStarter.Infrastructure.Repositories.Write
 
     }
 }
+#endif

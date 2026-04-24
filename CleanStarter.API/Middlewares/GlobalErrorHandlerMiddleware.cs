@@ -1,4 +1,5 @@
 ﻿using CleanStarter.Application.Common;
+using FluentValidation;
 using System.Net;
 using System.Text.Json;
 
@@ -25,6 +26,7 @@ namespace CleanStarter.api.Middlewares
             {
                 _logger.LogError(ex, "Something went wrong: {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex);
+
             }
         }
 
@@ -46,6 +48,12 @@ namespace CleanStarter.api.Middlewares
                 case ArgumentException e:
                     
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+                case ValidationException validationException:
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                    var errorMessages = string.Join(" | ", validationException.Errors.Select(e => e.ErrorMessage));
+                    response = ApiResponse<string>.Failure(errorMessages);
                     break;
                 default:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-#if (ArchitecturePattern == Repository)
+#if IsRepository
 namespace CleanStarter.Application.Interfaces.RepositoryInterfaces.Read
 {
     public interface IGenericReadRepository<T, TId> where T : class, IEntity<TId>
