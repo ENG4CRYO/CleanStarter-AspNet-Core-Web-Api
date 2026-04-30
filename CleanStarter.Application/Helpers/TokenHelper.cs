@@ -1,10 +1,12 @@
 ﻿using CleanStarter.Application.Interfaces;
+using CleanStarter.Application.Interfaces.Common;
 using CleanStarter.Application.Interfaces.Helpers;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Read;
 using CleanStarter.Application.Interfaces.RepositoryInterfaces.Write;
 using CleanStarter.Core.Entities;
 using CleanStarter.Core.Entities.AuthEntites;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -21,20 +23,11 @@ namespace CleanStarter.Application.Helpers
     {
         private readonly JWT _jwt;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IGenericReadRepository<RefreshToken, int> _refreshTokenReadRepo;
-        private readonly IGenericWriteRepository<RefreshToken, int> _refreshTokenWriteRepo;
-        private readonly IUnitOfWork _unitOfWork;
         public TokenHelper(IOptions<JWT> jwt,
-            UserManager<ApplicationUser> userManager,
-            IGenericReadRepository <RefreshToken,int> refreshTokenReadRepo,
-            IGenericWriteRepository <RefreshToken,int> refreshTokenWriteRepo,
-            IUnitOfWork unitOfWork)
+            UserManager<ApplicationUser> userManager)
         {
             _jwt = jwt.Value;
             _userManager = userManager;
-            _refreshTokenReadRepo = refreshTokenReadRepo;
-            _refreshTokenWriteRepo = refreshTokenWriteRepo;
-            _unitOfWork = unitOfWork;
         }
         public async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
         {
@@ -84,24 +77,22 @@ namespace CleanStarter.Application.Helpers
                 Expires = DateTime.UtcNow.AddDays(_jwt.RefreshTokenValidityInDays),
                 Created = DateTime.UtcNow
             };
-
-
         }
 
-        public async Task ManageUserTokensAsync(string userId)
+        public async Task ManageUserTokensAsync(string userId, CancellationToken cancellationToken)
         {
-            var expiredTokens = await _refreshTokenReadRepo.ListAsync(t => t.UserId == userId && t.Expires <= DateTime.UtcNow)
+            var expiredTokens = await _context.ListAsync(t => t.UserId == userId && t.Expires <= DateTime.UtcNow, cancellationToken)
                 ?? Enumerable.Empty<RefreshToken>(); ;
             if (expiredTokens.Any())
             {
-                await _refreshTokenWriteRepo.DeleteRangeAsync(expiredTokens);
+                await _context.DeleteRangeAsync(expiredTokens);
                 await _unitOfWork.SaveChangesAsync();
             }
 
             const int MaxActiveSessions = 5;
 
             var activeTokens = await _refreshTokenReadRepo.ListAsync(t =>
-                t.UserId == userId && t.Revoked == null && t.Expires > DateTime.UtcNow);
+                t.UserId == userId && t.Revoked == null && t.Expires > DateTime.UtcNow, cancellationToken);
 
             if (activeTokens.Count >= MaxActiveSessions)
             {

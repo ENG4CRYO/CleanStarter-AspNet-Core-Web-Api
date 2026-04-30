@@ -31,17 +31,17 @@ namespace CleanStarter.Infrastructure.Repositories.Write
         }
         public async Task UpdateAsync(T entity)
         {
-            _context.Entry(entity).CurrentValues.SetValues(entity);
+            _context.Set<T>().Update(entity);
         }
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(predicate);
+            return await _context.Set<T>().FirstOrDefaultAsync(predicate, cancellationToken);
         }
 
-        public async Task<T?> GetByIdAsync(object id)
+        public async Task<T?> GetByIdAsync(object id, CancellationToken cancellationToken)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return await _context.Set<T>().FindAsync(id, cancellationToken);
         }
 
     }

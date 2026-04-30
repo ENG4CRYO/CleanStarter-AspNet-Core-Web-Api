@@ -64,9 +64,9 @@ namespace CleanStarter.API.Controllers.V1
         [EndpointDescription("Verify refresh token, rovoke the refresh token, issue new refresh token")]
         [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<AuthModel>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RefreshToken([FromBody] RequestRefreshToken refreshToken)
+        public async Task<IActionResult> RefreshToken([FromBody] RequestRefreshToken refreshToken, CancellationToken cancellationToken)
         {
-            var result = await _authService.RefreshTokenAsync(refreshToken.Token);
+            var result = await _authService.RefreshTokenAsync(refreshToken.Token, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -79,14 +79,14 @@ namespace CleanStarter.API.Controllers.V1
         [EndpointDescription("revoke the refresh token")]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest model)
+        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest model, CancellationToken cancellationToken)
         {
           
 
             if (string.IsNullOrEmpty(model.Token))
                 return BadRequest(ApiResponse<string>.Failure("Token is required!"));
 
-            var result = await _authService.RevokeTokenAsync(model.Token);
+            var result = await _authService.RevokeTokenAsync(model.Token, cancellationToken);
 
             if (!result.Succeeded)
                 return BadRequest(result);

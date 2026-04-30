@@ -53,7 +53,7 @@ namespace CleanStarter.Application.Services
 
         }
 
-        public async Task<ApiResponse<AuthModel>> GetTokenAsync(TokenRequestModel tokenRequestModel)
+        public async Task<ApiResponse<AuthModel>> GetTokenAsync(TokenRequestModel tokenRequestModel, CancellationToken cancellationToken)
         {
             var ApiResponse = new ApiResponse<AuthModel>();
             var authModel = new AuthModel();
@@ -69,7 +69,7 @@ namespace CleanStarter.Application.Services
             var tokenString = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
 
-            await _tokenHelper.ManageUserTokensAsync(user.Id);
+            await _tokenHelper.ManageUserTokensAsync(user.Id, cancellationToken);
             var refreshToken = _tokenHelper.GenerateRefreshToken();
             refreshToken.UserId = user.Id;
 
@@ -93,7 +93,7 @@ namespace CleanStarter.Application.Services
 
         }
 
-        public async Task<ApiResponse<AuthModel>> RegisterAsync(RegisterModel registerModel)
+        public async Task<ApiResponse<AuthModel>> RegisterAsync(RegisterModel registerModel, CancellationToken cancellationToken)
         {
             var ApiResponse = new ApiResponse<AuthModel>();
             var authModel = new AuthModel();
@@ -145,9 +145,9 @@ namespace CleanStarter.Application.Services
 
         }
 
-        public async Task<ApiResponse<AuthModel>> RefreshTokenAsync(string refreshToken)
+        public async Task<ApiResponse<AuthModel>> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
         {
-            var storedToken = await _refreshTokenReadRepo.GetAsync(t => t.Token == refreshToken);
+            var storedToken = await _refreshTokenReadRepo.GetAsync(t => t.Token == refreshToken, cancellationToken);
    
             if (storedToken == null)
                 return ApiResponse<AuthModel>.Failure("Invalid refresh token");
@@ -163,7 +163,7 @@ namespace CleanStarter.Application.Services
             if (!storedToken.IsActive)
                 return ApiResponse<AuthModel>.Failure("Refresh token expired");
 
-            await _tokenHelper.ManageUserTokensAsync(user.Id);
+            await _tokenHelper.ManageUserTokensAsync(user.Id, cancellationToken);
             var newRefreshToken = _tokenHelper.GenerateRefreshToken();
             newRefreshToken.UserId = user.Id;
 
@@ -189,10 +189,10 @@ namespace CleanStarter.Application.Services
             return ApiResponse<AuthModel>.Success(authModel);
         }
 
-        public async Task<ApiResponse<bool>> RevokeTokenAsync(string token)
+        public async Task<ApiResponse<bool>> RevokeTokenAsync(string token, CancellationToken cancellationToken)
         {
 
-            var storedToken = await _refreshTokenReadRepo.GetAsync(t => t.Token == token);
+            var storedToken = await _refreshTokenReadRepo.GetAsync(t => t.Token == token, cancellationToken);
 
        
             if (storedToken == null)

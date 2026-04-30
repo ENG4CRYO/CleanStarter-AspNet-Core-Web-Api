@@ -12,8 +12,8 @@ namespace CleanStarter.Application.Interfaces.RepositoryInterfaces.Write
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         Task DeleteRangeAsync(IEnumerable<T> entities);
-        Task<T?> GetByIdAsync(object id);
-        Task<T?> GetAsync(Expression<Func<T, bool>> predicate);
+        Task<T?> GetByIdAsync(object id,CancellationToken cancellationToken);
+        Task<T?> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
     }
 }
 #endif

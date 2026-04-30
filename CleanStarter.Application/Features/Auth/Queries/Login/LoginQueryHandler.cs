@@ -50,7 +50,7 @@ namespace CleanStarter.Application.Features.Auth.Queries.Login
             var jwtSecurityToken = await _tokenHelper.CreateJwtToken(user);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
-            await _tokenHelper.ManageUserTokensAsync(user.Id);
+            await _tokenHelper.ManageUserTokensAsync(user.Id, cancellationToken);
 
             var refreshToken = _tokenHelper.GenerateRefreshToken();
             refreshToken.UserId = user.Id;

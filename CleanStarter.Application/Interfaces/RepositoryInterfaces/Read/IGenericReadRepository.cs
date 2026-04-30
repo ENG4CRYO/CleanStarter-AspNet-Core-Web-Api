@@ -10,10 +10,10 @@ namespace CleanStarter.Application.Interfaces.RepositoryInterfaces.Read
 {
     public interface IGenericReadRepository<T, TId> where T : class, IEntity<TId>
     {
-        Task<T?> GetByIdAsync(TId id);
-        Task<IReadOnlyList<T>> ListAllAsync();
-        Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> predicate);
-        Task<T?> GetAsync(Expression<Func<T, bool>> predicate);
+        Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken);
+        Task<IReadOnlyList<T>> ListAllAsync(CancellationToken cancellationToken);
+        Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
+        Task<T?> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
     }
 }
 #endif

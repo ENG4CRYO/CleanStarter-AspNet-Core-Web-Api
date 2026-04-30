@@ -5,6 +5,7 @@ using CleanStarter.API.Extensions;
 using CleanStarter.Application.Common;
 using CleanStarter.Application.Extensions;
 using CleanStarter.Infrastructure.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Serilog;
@@ -77,11 +78,15 @@ try
     {
         app.UseCors("Production");
     }
-    app.UseForwardedHeaders(new ForwardedHeadersOptions
+
+    var forwardedHeadersOptions = new ForwardedHeadersOptions
     {
-        ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor |
-                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
-    });
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    };
+    forwardedHeadersOptions.KnownIPNetworks.Clear();
+    forwardedHeadersOptions.KnownProxies.Clear();
+    app.UseForwardedHeaders(forwardedHeadersOptions);
+
     app.UseHttpsRedirection();
 
     app.UseSecurityHeaders(PolicyCollection.policyCollection(app));

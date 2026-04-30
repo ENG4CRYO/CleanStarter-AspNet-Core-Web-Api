@@ -21,24 +21,24 @@ namespace CleanStarter.Infrastructure.Repositories.Read
             _context = context;
         }
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate);
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate, cancellationToken);
         }
 
-        public async Task<T?> GetByIdAsync(TId id)
+        public async Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken)
         {
-            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(e => e.Id.Equals(id));
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
         }
 
-        public async Task<IReadOnlyList<T>> ListAllAsync()
+        public async Task<IReadOnlyList<T>> ListAllAsync(CancellationToken cancellationToken)
         {
-            return await _context.Set<T>().AsNoTracking().ToListAsync();
+            return await _context.Set<T>().AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _context.Set<T>().AsNoTracking().Where(predicate).ToListAsync();
+            return await _context.Set<T>().AsNoTracking().Where(predicate).ToListAsync(cancellationToken);
         }
     }
 }

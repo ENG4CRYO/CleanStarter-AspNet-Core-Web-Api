@@ -2,6 +2,7 @@
 using CleanStarter.Application.Common.Behaviors;
 using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces;
+using CleanStarter.Application.Interfaces.Helpers;
 using CleanStarter.Application.Profiles;
 using CleanStarter.Application.Services;
 using FluentValidation;
@@ -19,7 +20,7 @@ namespace CleanStarter.Application.Extensions
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<JWT>();
-            services.AddScoped<TokenHelper>();
+            services.AddScoped<ITokenHelper, TokenHelper>();
             services.AddAutoMapper(cfg => cfg.AddProfile<AuthProfile>());
 
 #if IsCQRS

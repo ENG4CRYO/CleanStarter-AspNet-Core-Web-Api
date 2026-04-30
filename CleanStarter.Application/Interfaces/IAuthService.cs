@@ -9,10 +9,10 @@ namespace CleanStarter.Application.Interfaces
 {
     public interface IAuthService
     {
-        Task<ApiResponse<AuthModel>> RegisterAsync(RegisterModel model);
-        Task<ApiResponse<AuthModel>> GetTokenAsync(TokenRequestModel model);
-        Task<ApiResponse<AuthModel>> RefreshTokenAsync(string token);
-        Task<ApiResponse<bool>> RevokeTokenAsync(string token);
+        Task<ApiResponse<AuthModel>> RegisterAsync(RegisterModel model, CancellationToken cancellationToken);
+        Task<ApiResponse<AuthModel>> GetTokenAsync(TokenRequestModel model, CancellationToken cancellationToken);
+        Task<ApiResponse<AuthModel>> RefreshTokenAsync(string token, CancellationToken cancellationToken);
+        Task<ApiResponse<bool>> RevokeTokenAsync(string token, CancellationToken cancellationToken);
     }
 }
 #endif

@@ -11,6 +11,6 @@ namespace CleanStarter.Application.Interfaces.Helpers
     {
         Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user);
         RefreshToken GenerateRefreshToken();
-        Task ManageUserTokensAsync(string userId);
+        Task ManageUserTokensAsync(string userId, CancellationToken cancellationToken);
     }
 }
