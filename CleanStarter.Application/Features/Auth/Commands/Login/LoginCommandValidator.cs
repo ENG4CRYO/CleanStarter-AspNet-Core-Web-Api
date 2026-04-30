@@ -3,15 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CleanStarter.Application.Features.Auth.Queries.Login
+namespace CleanStarter.Application.Features.Auth.Commands.Login
 {
-#if IsCQRS
-    public class LoginQueryValidator : AbstractValidator<LoginQuery>
+    public class LoginCommandValidator : AbstractValidator<LoginCommand>
     {
-        public LoginQueryValidator()
+        public LoginCommandValidator()
         {
             RuleFor(x => x.Model).SetValidator(new Validators.TokenRequsetModelValidator());
         }
     }
-#endif
 }

@@ -5,19 +5,20 @@ using System.Collections.Generic;
 using System.Text;
 using MediatR;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using FluentValidation;
+using AutoMapper.Configuration;
 
 
-namespace CleanStarter.Application.Features.Auth.Queries.Login
+namespace CleanStarter.Application.Features.Auth.Commands.Login
 {
-#if IsCQRS
-    public class LoginQuery : IRequest<ApiResponse<AuthModel>>
+
+    public class LoginCommand : IRequest<ApiResponse<AuthModel>>
     {
         public TokenRequestModel Model { get; set; }
-
-        public LoginQuery(TokenRequestModel model)
+        public LoginCommand(TokenRequestModel model )
         {
             Model = model;
         }
     }
-#endif
+
 }

@@ -1,6 +1,9 @@
-﻿public class AspRoles
+﻿namespace CleanStarter.Core.Constants
 {
-    public const string Admin = "Admin";
-    public const string User = "User";
+    public class AspRoles
+    {
+        public const string Admin = "Admin";
+        public const string User = "User";
+    }
 }
 

@@ -3,10 +3,12 @@ using CleanStarter.api.Factories;
 using CleanStarter.Application.Common;
 using CleanStarter.Application.Dtos.AuthModel;
 using CleanStarter.Application.Features.Auth.Commands.Register;
-using CleanStarter.Application.Features.Auth.Queries.Login;
+using CleanStarter.Application.Features.Auth.Commands.Login;
 using CleanStarter.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using CleanStarter.Application.Features.Auth.Commands.RefreshToken;
+using CleanStarter.Application.Features.Auth.Commands.RevokeToken;
 
 namespace CleanStarter.API.Controllers.V1
 {
@@ -15,12 +17,10 @@ namespace CleanStarter.API.Controllers.V1
     [ApiVersion("1.0")]
     public class AuthController : ControllerBase 
     {
-        private readonly IAuthService _authService;
         private readonly IMediator _mediator;
 
-        public AuthController(IAuthService authService, IMediator mediator)
+        public AuthController( IMediator mediator)
         {
-            _authService = authService;
             _mediator = mediator;   
         }
 
@@ -30,11 +30,7 @@ namespace CleanStarter.API.Controllers.V1
         [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-#if IsCQRS
             var response = await _mediator.Send(new RegisterCommand(model));
-#elif IsRepository
-            var response = await _authService.RegisterAsync(model);
-#endif
             if (!response.Succeeded)
                 return BadRequest(response);
 
@@ -47,12 +43,7 @@ namespace CleanStarter.API.Controllers.V1
         [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] TokenRequestModel model)
         {
-
-#if IsCQRS
-            var response = await _mediator.Send(new LoginQuery(model));
-#elif IsRepository
-            var response = await _authService.GetTokenAsync(model);
-#endif
+            var response = await _mediator.Send(new LoginCommand(model));
             if (!response.Succeeded)
                 return BadRequest(response);
 
@@ -66,12 +57,12 @@ namespace CleanStarter.API.Controllers.V1
         [ProducesResponseType(typeof(ApiResponse<AuthModel>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RefreshToken([FromBody] RequestRefreshToken refreshToken, CancellationToken cancellationToken)
         {
-            var result = await _authService.RefreshTokenAsync(refreshToken.Token, cancellationToken);
+            var response = await _mediator.Send(new RefreshTokenCommand(refreshToken));
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+            if (!response.Succeeded)
+                return BadRequest(response);
 
-            return Ok(result);
+            return Ok(response);
         }
 
 
@@ -86,10 +77,10 @@ namespace CleanStarter.API.Controllers.V1
             if (string.IsNullOrEmpty(model.Token))
                 return BadRequest(ApiResponse<string>.Failure("Token is required!"));
 
-            var result = await _authService.RevokeTokenAsync(model.Token, cancellationToken);
+            var response = await _mediator.Send(new RevokeTokenCommand(model));
 
-            if (!result.Succeeded)
-                return BadRequest(result);
+            if (!response.Succeeded)
+                return BadRequest(response);
 
             return Ok(ApiResponse<string>.Success("Token revoked successfully"));
         }

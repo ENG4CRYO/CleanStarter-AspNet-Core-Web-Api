@@ -8,7 +8,6 @@ using System.Text;
 
 namespace CleanStarter.Application.Features.Auth.Commands.Register
 {
-#if IsCQRS
     public class RegisterCommand : IRequest<ApiResponse<AuthModel>>
     {
         public RegisterModel Model { get; set; }
@@ -18,5 +17,4 @@ namespace CleanStarter.Application.Features.Auth.Commands.Register
             Model = model;
         }
     }
-#endif
 }

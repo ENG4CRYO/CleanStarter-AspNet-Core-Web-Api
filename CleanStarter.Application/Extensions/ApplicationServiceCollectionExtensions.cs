@@ -4,7 +4,6 @@ using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces;
 using CleanStarter.Application.Interfaces.Helpers;
 using CleanStarter.Application.Profiles;
-using CleanStarter.Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -18,7 +17,6 @@ namespace CleanStarter.Application.Extensions
     {
         public static void AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<JWT>();
             services.AddScoped<ITokenHelper, TokenHelper>();
             services.AddAutoMapper(cfg => cfg.AddProfile<AuthProfile>());

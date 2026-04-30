@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using CleanStarter.Core.Constants;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

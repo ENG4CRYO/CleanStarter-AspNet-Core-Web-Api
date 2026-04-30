@@ -1,10 +1,10 @@
 ﻿using CleanStarter.API.Controllers.V1;
-using CleanStarter.Application.Services;
+using CleanStarter.Application.Features.Auth.Commands.Login;
 using CleanStarter.Core.Entities;
 using CleanStarter.Infrastructure.Data;
 using FluentAssertions;
+using MediatR;
 using NetArchTest.Rules;
-using System;
 using Xunit;
 
 namespace CleanStarter.UnitTests.Architecture
@@ -34,8 +34,8 @@ namespace CleanStarter.UnitTests.Architecture
         [Fact]
         public void Application_Should_Not_DependOn_Infrastructure_Or_API()
         {
-   
-            var result = Types.InAssembly(typeof(AuthService).Assembly)
+           
+            var result = Types.InAssembly(typeof(LoginCommand).Assembly)
                 .ShouldNot()
                 .HaveDependencyOn(InfrastructureNamespace)
                 .And()
@@ -57,31 +57,70 @@ namespace CleanStarter.UnitTests.Architecture
         }
 
         [Fact]
-        public void Controllers_Should_Not_Depend_Directly_On_Repositories()
+        public void Controllers_Should_Not_Depend_Directly_On_Infrastructure()
         {
-
+          
             var result = Types.InAssembly(typeof(AuthController).Assembly)
                 .That()
                 .HaveNameEndingWith("Controller")
                 .ShouldNot()
-                .HaveDependencyOn("CleanStarter.Infrastructure.Repositories")
+                .HaveDependencyOn(InfrastructureNamespace)
                 .GetResult();
 
-            result.IsSuccessful.Should().BeTrue("Controllers should communicate via Services/Handlers, not Repositories directly.");
+            result.IsSuccessful.Should().BeTrue("Controllers should communicate via MediatR ISender, not Infrastructure directly.");
         }
 
         [Fact]
-        public void Services_Should_Have_Name_Ending_With_Service()
+        public void Handlers_Should_Have_Name_Ending_With_Handler()
         {
-           
-            var result = Types.InAssembly(typeof(AuthService).Assembly)
+            var result = Types.InAssembly(typeof(LoginCommand).Assembly)
                 .That()
-                .ImplementInterface(typeof(CleanStarter.Application.Interfaces.IAuthService)) // مثال
+                .ImplementInterface(typeof(IRequestHandler<,>))
                 .Should()
-                .HaveNameEndingWith("Service")
+                .HaveNameEndingWith("Handler")
                 .GetResult();
 
-            result.IsSuccessful.Should().BeTrue();
+            result.IsSuccessful.Should().BeTrue("All MediatR handlers must have a name ending with 'Handler'.");
+        }
+
+        [Fact]
+        public void Commands_Should_Have_Name_Ending_With_Command()
+        {
+           
+            var result = Types.InAssembly(typeof(LoginCommand).Assembly)
+                .That()
+                .ResideInNamespaceContaining("Commands")
+                .And()
+                .AreNotInterfaces()
+                .And()
+                .DoNotHaveNameEndingWith("Validator")
+                .And()
+                .DoNotHaveNameEndingWith("Handler")
+                .Should()
+                .HaveNameEndingWith("Command")
+                .GetResult();
+
+            result.IsSuccessful.Should().BeTrue("All request objects in Commands namespaces must end with 'Command'.");
+        }
+
+        [Fact]
+        public void Queries_Should_Have_Name_Ending_With_Query()
+        {
+    
+            var result = Types.InAssembly(typeof(LoginCommand).Assembly)
+                .That()
+                .ResideInNamespaceContaining("Queries")
+                .And()
+                .AreNotInterfaces()
+                .And()
+                .DoNotHaveNameEndingWith("Validator")
+                .And()
+                .DoNotHaveNameEndingWith("Handler")
+                .Should()
+                .HaveNameEndingWith("Query")
+                .GetResult();
+
+            result.IsSuccessful.Should().BeTrue("All request objects in Queries namespaces must end with 'Query'.");
         }
     }
 }
