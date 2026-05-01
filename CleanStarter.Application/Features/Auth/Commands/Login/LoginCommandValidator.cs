@@ -9,7 +9,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.Login
     {
         public LoginCommandValidator()
         {
-            RuleFor(x => x.Model).SetValidator(new Validators.TokenRequsetModelValidator());
+            RuleFor(x => x.Model).SetValidator(new Validators.TokenRequestModelValidator());
         }
     }
 }

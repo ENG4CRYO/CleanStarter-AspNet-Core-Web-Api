@@ -2,9 +2,12 @@
 using CleanStarter.Application.Common.Behaviors;
 using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces;
+using CleanStarter.Application.Interfaces.Common;
 using CleanStarter.Application.Interfaces.Helpers;
 using CleanStarter.Application.Profiles;
+using CleanStarter.Application.Services;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -21,7 +24,12 @@ namespace CleanStarter.Application.Extensions
             services.AddScoped<ITokenHelper, TokenHelper>();
             services.AddAutoMapper(cfg => cfg.AddProfile<AuthProfile>());
 
-#if IsCQRS
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
             services.AddMediatR(cfg => {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -29,8 +37,6 @@ namespace CleanStarter.Application.Extensions
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
 
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-#endif
 
             services.AddValidatorsFromAssembly(typeof(ApplicationServiceCollectionExtensions).Assembly);
 

@@ -1,8 +1,13 @@
 ﻿using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces;
 using CleanStarter.Application.Interfaces.Common;
+using CleanStarter.Application.Interfaces.Infrastructure;
 using CleanStarter.Core.Entities;
+using CleanStarter.Infrastructure.BackgroundJobs;
 using CleanStarter.Infrastructure.Data;
+using CleanStarter.Infrastructure.Models;
+using CleanStarter.Infrastructure.Services;
+using CleanStarter.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Channels;
 
 namespace CleanStarter.Infrastructure.Extensions
 {
@@ -38,7 +44,18 @@ namespace CleanStarter.Infrastructure.Extensions
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
+      
+            services.AddSingleton(Channel.CreateUnbounded<EmailMessage>());
 
+            services.AddTransient<IEmailService, EmailService>();
+
+            services.AddHostedService<EmailBackgroundSender>();
+
+            services.AddMemoryCache();
+
+            services.AddSingleton<ICacheService, MemoryCacheService>();
+
+            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
 
             services.Configure<JWT>(configuration.GetSection("JWT"));
             services.AddAuthentication(options =>
@@ -50,6 +67,7 @@ namespace CleanStarter.Infrastructure.Extensions
                 var jwtKey = configuration["JWT:Key"];
                 var jwtIssuer = configuration["JWT:Issuer"];
                 var jwtAudience = configuration["JWT:Audience"];
+     
 
                 if (string.IsNullOrEmpty(jwtKey))
                 {
@@ -58,6 +76,7 @@ namespace CleanStarter.Infrastructure.Extensions
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ClockSkew = TimeSpan.Zero,
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
                     ValidateAudience = true,

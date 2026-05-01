@@ -6,9 +6,9 @@ using System.Text;
 
 namespace CleanStarter.Application.Validators
 {
-    public class TokenRequsetModelValidator : AbstractValidator<TokenRequestModel>
+    public class TokenRequestModelValidator : AbstractValidator<TokenRequestModel>
     {
-        public TokenRequsetModelValidator()
+        public TokenRequestModelValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email Is Required")
