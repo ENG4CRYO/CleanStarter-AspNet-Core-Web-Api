@@ -37,7 +37,8 @@ namespace CleanStarter.Application.Helpers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim("uid", user.Id),
-                new Claim("fullName", user.FullName)
+                new Claim("firstName", user.FirstName),
+                new Claim("lastName", user.LastName)
             }.Union(userClaims).Union(roleClaims);
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));

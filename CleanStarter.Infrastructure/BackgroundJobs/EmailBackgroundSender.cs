@@ -4,6 +4,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Threading;
@@ -20,11 +21,11 @@ namespace CleanStarter.Infrastructure.BackgroundJobs
 
         public EmailBackgroundSender(Channel<EmailMessage> emailChannel,
             ILogger<EmailBackgroundSender> logger,
-            MailSettings mailSettings)
+            IOptions<MailSettings> mailSettings)
         {
             _emailChannel = emailChannel;
             _logger = logger;
-            _mailSettings = mailSettings;
+            _mailSettings = mailSettings.Value;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

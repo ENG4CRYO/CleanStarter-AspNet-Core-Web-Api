@@ -15,6 +15,7 @@ namespace CleanStarter.Application.Profiles
             CreateMap<RegisterModel, ApplicationUser>();
             CreateMap<AuthModel, ApplicationUser>();
             CreateMap<ApplicationUser, AuthModel>();
+            CreateMap<InitiateRegistrationRequest, ApplicationUser>();
         }
     }
 }
