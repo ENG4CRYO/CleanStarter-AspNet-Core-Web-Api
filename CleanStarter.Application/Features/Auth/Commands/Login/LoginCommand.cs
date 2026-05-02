@@ -14,8 +14,8 @@ namespace CleanStarter.Application.Features.Auth.Commands.Login
 
     public class LoginCommand : IRequest<ApiResponse<AuthModel>>
     {
-        public TokenRequestModel Model { get; set; }
-        public LoginCommand(TokenRequestModel model )
+        public LoginRequest Model { get; set; }
+        public LoginCommand(LoginRequest model )
         {
             Model = model;
         }

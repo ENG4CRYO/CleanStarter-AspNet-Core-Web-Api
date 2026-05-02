@@ -1,90 +1,120 @@
-﻿using Asp.Versioning;
-using CleanStarter.api.Factories;
-using CleanStarter.Application.Common;
-using CleanStarter.Application.Dtos.AuthModel;
-using CleanStarter.Application.Features.Auth.Commands.Register;
-using CleanStarter.Application.Features.Auth.Commands.Login;
-using CleanStarter.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using CleanStarter.Application.Dtos.AuthModel;
+using CleanStarter.Application.Features.Auth.Commands.InitiateRegistration;
+using CleanStarter.Application.Features.Auth.Commands.VerifyRegistration;
+using CleanStarter.Application.Features.Auth.Commands.Login;
 using CleanStarter.Application.Features.Auth.Commands.RefreshToken;
 using CleanStarter.Application.Features.Auth.Commands.RevokeToken;
+using CleanStarter.Application.Features.Auth.Commands.ForgotPassword;
+using CleanStarter.Application.Features.Auth.Commands.ResetPassword;
 
 namespace CleanStarter.API.Controllers.V1
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/[Controller]")]
-    [ApiVersion("1.0")]
-    public class AuthController : ControllerBase 
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public AuthController( IMediator mediator)
+        public AuthController(IMediator mediator)
         {
-            _mediator = mediator;   
+            _mediator = mediator;
         }
 
-        [HttpPost("register")]
-        [EndpointDescription("It creates a new user account and returns the token and user details. It requires a unique email address.")]
-        [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
-        {
-            var response = await _mediator.Send(new RegisterCommand(model));
-            if (!response.Succeeded)
-                return BadRequest(response);
+        #region Registration Flow (OTP Based)
 
-            return Ok(response);
+        [HttpPost("initiate-registration")]
+        public async Task<IActionResult> InitiateRegistration([FromBody] InitiateRegistrationRequest request)
+        {
+            var command = new InitiateRegistrationCommand(request);
+            var result = await _mediator.Send(command);
+
+            if (!result.Succeeded)
+                return BadRequest(result);
+
+            return Ok(result);
         }
+
+        [HttpPost("verify-registration")]
+        public async Task<IActionResult> VerifyRegistration([FromBody] VerifyRegistrationRequest request)
+        {
+            var command = new VerifyRegistrationCommand(request);
+            var result = await _mediator.Send(command);
+
+            if (!result.Succeeded)
+                return BadRequest(result);
+
+           
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Login & Token Management
 
         [HttpPost("login")]
-        [EndpointDescription("Verifying user cridential,Issue Token and refresh token for user")]
-        [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login([FromBody] TokenRequestModel model)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var response = await _mediator.Send(new LoginCommand(model));
-            if (!response.Succeeded)
-                return BadRequest(response);
+            var command = new LoginCommand(request);
+            var result = await _mediator.Send(command);
 
-            return Ok(response);
+            if (!result.Succeeded)
+                return Unauthorized(result);
+
+            return Ok(result);
         }
-
 
         [HttpPost("refresh-token")]
-        [EndpointDescription("Verify refresh token, rovoke the refresh token, issue new refresh token")]
-        [ProducesResponseType(typeof(ApiResponse<AuthModel>),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<AuthModel>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RefreshToken([FromBody] RequestRefreshToken refreshToken, CancellationToken cancellationToken)
+        public async Task<IActionResult> RefreshToken([FromBody] RequestRefreshToken request)
         {
-            var response = await _mediator.Send(new RefreshTokenCommand(refreshToken));
+            var command = new RefreshTokenCommand(request);
+            var result = await _mediator.Send(command);
 
-            if (!response.Succeeded)
-                return BadRequest(response);
+            if (!result.Succeeded)
+                return BadRequest(result);
 
-            return Ok(response);
+            return Ok(result);
         }
 
-
-        [HttpPost("logout")]
-        [EndpointDescription("revoke the refresh token")]
-        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest model, CancellationToken cancellationToken)
+        [HttpPost("revoke-token")]
+        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest request)
         {
-          
+            var command = new RevokeTokenCommand(request);
+            var result = await _mediator.Send(command);
 
-            if (string.IsNullOrEmpty(model.Token))
-                return BadRequest(ApiResponse<string>.Failure("Token is required!"));
+            if (!result.Succeeded)
+                return BadRequest(result);
 
-            var response = await _mediator.Send(new RevokeTokenCommand(model));
-
-            if (!response.Succeeded)
-                return BadRequest(response);
-
-            return Ok(ApiResponse<string>.Success("Token revoked successfully"));
+            return Ok(result);
         }
 
-       
+        #endregion
+
+        #region Password Management Flow
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var command = new ForgotPasswordCommand(request);
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var command = new ResetPasswordCommand(request);
+            var result = await _mediator.Send(command);
+
+            if (!result.Succeeded)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ using CleanStarter.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
 
             if (user != null)
             {
-                var otpCode = new Random().Next(100000, 999999).ToString();
+                var otpCode = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
 
                 var cacheDto = new ResetPasswordCacheDto
                 {

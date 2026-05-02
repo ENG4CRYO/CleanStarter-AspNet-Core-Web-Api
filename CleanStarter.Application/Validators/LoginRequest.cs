@@ -3,12 +3,13 @@ using CleanStarter.Application.Dtos.AuthModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CleanStarter.Application.Features.Auth.Commands.Login;
 
 namespace CleanStarter.Application.Validators
 {
-    public class TokenRequestModelValidator : AbstractValidator<TokenRequestModel>
+    public class LoginRequestValidator : AbstractValidator<LoginRequest>
     {
-        public TokenRequestModelValidator()
+        public LoginRequestValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email Is Required")
