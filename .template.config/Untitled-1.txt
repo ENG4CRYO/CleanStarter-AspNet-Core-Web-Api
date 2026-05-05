@@ -1,0 +1,10 @@
+ConnectionStrings__DefaultConnection=10.0.0.94;Database=LiveAuctionDb;Username=postgres;Password=Mustafa0Aqel#
+
+JWT__Key=C0kIxA9j8zuCsx4Nt-p5jokwEGtQwb5c7b4YAnnk7dE=
+JWT__Issuer=LiveAuction
+JWT__Audience=LiveAuctionApi
+
+DomainUrl=https://apiservice.ddns.net
+
+MailSettings__Email=liveauctionverify@gmail.com
+MailSettings__Password=gisd gsct trlh xuca

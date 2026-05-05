@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
 using MediatR;
-using System;
+using CleanStarter.Application.Common;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CleanStarter.Application.Common.Behaviors
 {
-#if IsCQRS
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
@@ -19,28 +20,38 @@ namespace CleanStarter.Application.Common.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            if (!_validators.Any())
+            if (_validators.Any())
             {
-                return await next();
+                var context = new ValidationContext<TRequest>(request);
+
+                var validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+                var failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
+
+                if (failures.Count != 0)
+                {
+                    var errorsDictionary = failures
+                        .GroupBy(x => x.PropertyName)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.Select(x => x.ErrorMessage).ToList()
+                        );
+
+                    var responseType = typeof(TResponse);
+                    if (responseType.IsGenericType && responseType.GetGenericTypeDefinition() == typeof(ApiResponse<>))
+                    {
+                        var resultType = responseType.GetGenericArguments()[0];
+                        var failureMethod = typeof(ApiResponse<>)
+                            .MakeGenericType(resultType)
+                            .GetMethod("Failure", new[] { typeof(string), typeof(Dictionary<string, List<string>>) });
+
+                     
+                        return (TResponse)failureMethod.Invoke(null, new object[] { "Validation Errors Occurred.", errorsDictionary });
+                    }
+
+                    throw new ValidationException(failures);
+                }
             }
-
-            var context = new ValidationContext<TRequest>(request);
-
-            var validationResults = await Task.WhenAll(
-                _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
-
-            var failures = validationResults
-                .Where(r => r.Errors.Any())
-                .SelectMany(r => r.Errors)
-                .ToList();
-
-            if (failures.Any())
-            {
-                throw new ValidationException(failures);
-            }
-
             return await next();
         }
     }
-#endif
 }

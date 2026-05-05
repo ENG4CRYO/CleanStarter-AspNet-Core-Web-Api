@@ -14,7 +14,7 @@ namespace CleanStarter.api.Extensions
                 options.OnRejected = async (context, token) =>
                 {
                     context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                    var response = ApiResponse<object>.Failure("Error : Rate Limiter", new List<string> { "Reached Requests Limit, Please Wait"});
+                    var response = ApiResponse<object>.Failure("Error : Rate Limiter");
                     await context.HttpContext.Response.WriteAsJsonAsync(response, token);
                 };
 

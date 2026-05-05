@@ -16,9 +16,12 @@ namespace CleanStarter.api.Factories
         {
             var errors = context.ModelState
                 .Where(e => e.Value.Errors.Count > 0)
-                .SelectMany(x => x.Value.Errors)
-                .Select(x => x.ErrorMessage)
-                .ToList();
+                .ToDictionary(
+                      kvp => kvp.Key,
+                      kvp => kvp.Value.Errors
+                    .Select(e => e.ErrorMessage)
+                    .ToList()
+                );
 
 
             var response = ApiResponse<object>.Failure("", errors);

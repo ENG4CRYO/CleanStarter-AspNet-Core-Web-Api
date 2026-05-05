@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanStarter.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260207163047_InitialCreate")]
+    [Migration("20260505112456_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,12 +20,12 @@ namespace CleanStarter.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "10.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CleanStarter.Core.Entites.ApplicationUser", b =>
+            modelBuilder.Entity("CleanStarter.Core.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -47,7 +47,11 @@ namespace CleanStarter.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -96,7 +100,7 @@ namespace CleanStarter.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("CleanStarter.Core.Entites.AuthEntites.RefreshToken", b =>
+            modelBuilder.Entity("CleanStarter.Core.Entities.AuthEntites.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -272,9 +276,9 @@ namespace CleanStarter.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CleanStarter.Core.Entites.AuthEntites.RefreshToken", b =>
+            modelBuilder.Entity("CleanStarter.Core.Entities.AuthEntites.RefreshToken", b =>
                 {
-                    b.HasOne("CleanStarter.Core.Entites.ApplicationUser", "User")
+                    b.HasOne("CleanStarter.Core.Entities.ApplicationUser", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -294,7 +298,7 @@ namespace CleanStarter.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("CleanStarter.Core.Entites.ApplicationUser", null)
+                    b.HasOne("CleanStarter.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -303,7 +307,7 @@ namespace CleanStarter.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("CleanStarter.Core.Entites.ApplicationUser", null)
+                    b.HasOne("CleanStarter.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -318,7 +322,7 @@ namespace CleanStarter.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CleanStarter.Core.Entites.ApplicationUser", null)
+                    b.HasOne("CleanStarter.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -327,14 +331,14 @@ namespace CleanStarter.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("CleanStarter.Core.Entites.ApplicationUser", null)
+                    b.HasOne("CleanStarter.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CleanStarter.Core.Entites.ApplicationUser", b =>
+            modelBuilder.Entity("CleanStarter.Core.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("RefreshTokens");
                 });

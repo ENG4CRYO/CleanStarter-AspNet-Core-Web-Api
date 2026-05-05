@@ -9,7 +9,7 @@ namespace CleanStarter.Application.Common
         public bool Succeeded { get; set; }
         public string Message { get; set; }
         public T Data { get; set; }
-        public List<string> Errors { get; set; }
+        public Dictionary<string, List<string>> Errors { get; set; }
 
         
         public ApiResponse() { }
@@ -25,7 +25,7 @@ namespace CleanStarter.Application.Common
         }
 
 
-        public static ApiResponse<T> Failure(string message, List<string> errors = null)
+        public static ApiResponse<T> Failure(string message, Dictionary<string, List<string>> errors = null)
         {
             return new ApiResponse<T>
             {
