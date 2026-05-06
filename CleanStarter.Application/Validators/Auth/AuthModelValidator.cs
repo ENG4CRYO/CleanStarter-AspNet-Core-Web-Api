@@ -3,13 +3,17 @@ using CleanStarter.Application.Dtos.AuthModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CleanStarter.Application.Resources;
+using Microsoft.Extensions.Localization;
 
-namespace CleanStarter.Application.Validators
+namespace CleanStarter.Application.Validators.Auth
 {
     public class AuthModelValidator : AbstractValidator<AuthModel>
     {
-        public AuthModelValidator()
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        public AuthModelValidator(IStringLocalizer<SharedResource> localizer)
         {
+            _localizer = localizer;
             RuleFor(x => x.UserName).
                 NotEmpty().WithMessage("User Name Is Required")
                 .Length(4, 10).WithMessage("The User Name Length Must Be Between 3 And 10");

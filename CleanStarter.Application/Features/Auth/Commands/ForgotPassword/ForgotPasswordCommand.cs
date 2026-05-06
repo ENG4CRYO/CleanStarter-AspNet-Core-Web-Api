@@ -6,10 +6,6 @@ namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
 {
     public class ForgotPasswordCommand : IRequest<ApiResponse<string>>
     {
-        public ForgotPasswordRequest Model { get; set; }
-        public ForgotPasswordCommand(ForgotPasswordRequest model)
-        {
-            Model = model;
-        }
+        public string Email { get; set; } = string.Empty;
     }
 }

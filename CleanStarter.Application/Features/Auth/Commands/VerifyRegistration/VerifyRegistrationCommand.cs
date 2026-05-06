@@ -6,11 +6,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
 {
     public class VerifyRegistrationCommand : IRequest<ApiResponse<AuthModel>>
     {
-        public VerifyRegistrationRequest Model { get; set; }
-
-        public VerifyRegistrationCommand(VerifyRegistrationRequest model)
-        {
-            Model = model;
-        }
+        public string RegisterToken { get; set; } = string.Empty;
+        public string OtpCode { get; set; } = string.Empty;
     }
 }

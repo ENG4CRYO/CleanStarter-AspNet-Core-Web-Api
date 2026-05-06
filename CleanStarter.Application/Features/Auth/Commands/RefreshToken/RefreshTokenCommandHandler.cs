@@ -32,7 +32,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.RefreshToken
 
         public async Task<ApiResponse<AuthModel>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            var tokenToRefresh = request.Model.Token;
+            var tokenToRefresh = request.Token;
 
             var user = await _userManager.Users
                 .Include(u => u.RefreshTokens)

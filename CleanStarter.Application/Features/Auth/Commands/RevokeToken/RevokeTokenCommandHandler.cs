@@ -26,7 +26,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.RevokeToken
 
         public async Task<ApiResponse<bool>> Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
         {
-            var tokenToRevoke = request.Model.Token;
+            var tokenToRevoke = request.Token;
 
             var user = await _userManager.Users
                 .Include(u => u.RefreshTokens)

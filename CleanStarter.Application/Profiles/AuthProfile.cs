@@ -4,6 +4,8 @@ using CleanStarter.Application.Dtos.AuthModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CleanStarter.Application.Features.Auth.Commands.Register;
+using CleanStarter.Application.Features.Auth.Commands.InitiateRegistration;
 
 namespace CleanStarter.Application.Profiles
 {
@@ -12,10 +14,10 @@ namespace CleanStarter.Application.Profiles
         public AuthProfile()
         {
             
-            CreateMap<RegisterModel, ApplicationUser>();
+            CreateMap<RegisterCommand, ApplicationUser>();
             CreateMap<AuthModel, ApplicationUser>();
             CreateMap<ApplicationUser, AuthModel>();
-            CreateMap<InitiateRegistrationRequest, ApplicationUser>();
+            CreateMap<InitiateRegistrationCommand, ApplicationUser>();
         }
     }
 }

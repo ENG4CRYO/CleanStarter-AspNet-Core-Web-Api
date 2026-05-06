@@ -37,13 +37,13 @@ namespace CleanStarter.Application.Features.Auth.Commands.InitiateRegistration
 
         public async Task<ApiResponse<string>> Handle(InitiateRegistrationCommand request, CancellationToken cancellationToken)
         {
-            var existingUser = await _userManager.FindByEmailAsync(request.Model.Email);
+            var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser != null)
             {
                 return ApiResponse<string>.Failure(_localizer["Auth.EmailAlreadyRegistered"]);
             }
 
-            var existingUsername = await _userManager.FindByNameAsync(request.Model.Username);
+            var existingUsername = await _userManager.FindByNameAsync(request.Username);
             if (existingUsername != null)
             {
                 return ApiResponse<string>.Failure(_localizer["Auth.UserNameAlreadyTaken"]);
@@ -51,7 +51,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.InitiateRegistration
             string otpCode;
             var registerToken = Guid.NewGuid().ToString();
 
-            bool isTestEmail = request.Model.Email.Contains("@test.com");
+            bool isTestEmail = request.Email.Contains("@test.com");
             if (isTestEmail)
             {
                 otpCode = "123456";
@@ -61,14 +61,14 @@ namespace CleanStarter.Application.Features.Auth.Commands.InitiateRegistration
                 otpCode = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
             }
 
-            var passwordHash = _userManager.PasswordHasher.HashPassword(null!, request.Model.Password);
+            var passwordHash = _userManager.PasswordHasher.HashPassword(null!, request.Password);
 
             var pendingUser = new PendingRegistrationDto
             {
-                FirstName = request.Model.FirstName,
-                LastName = request.Model.LastName,
-                Email = request.Model.Email,
-                Username = request.Model.Username,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                Username = request.Username,
                 PasswordHash = passwordHash,
                 OtpCode = otpCode
             };
@@ -79,13 +79,13 @@ namespace CleanStarter.Application.Features.Auth.Commands.InitiateRegistration
             {
                 var emailPlaceholders = new Dictionary<string, string>
                 {
-                     { "FirstName", request.Model.FirstName },
+                     { "FirstName", request.FirstName },
                      { "OtpCode", otpCode }
                 };
 
                 var emailBody = await _templateService.GetTemplateAsync("OtpEmail", emailPlaceholders);
 
-                await _emailService.SendEmailAsync(request.Model.Email, "Your Secure OTP Code", emailBody, cancellationToken);
+                await _emailService.SendEmailAsync(request.Email, "Your Secure OTP Code", emailBody, cancellationToken);
             }
          
             return ApiResponse<string>.Success(registerToken, _localizer["Auth.Auth.RegisterSendOtp"]);

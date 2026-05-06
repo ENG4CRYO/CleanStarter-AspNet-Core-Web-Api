@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CleanStarter.Application.Validators.Auth;
+using FluentValidation;
 
 namespace CleanStarter.Application.Features.Auth.Commands.RefreshToken
 {
@@ -6,7 +7,8 @@ namespace CleanStarter.Application.Features.Auth.Commands.RefreshToken
     {
         public RefreshTokenCommandValidator()
         {
-            RuleFor(x => x.Model).SetValidator(new Validators.RequestRefreshTokenValidator());
+            RuleFor(x => x.Token).NotNull().WithMessage("Refresh Token Cannot Be Null")
+            .NotEmpty().WithMessage("Refresh Token Canneot Be Empty");
         }
     }
 }

@@ -9,10 +9,6 @@ namespace CleanStarter.Application.Features.Auth.Commands.RevokeToken
 {
     public class RevokeTokenCommand : IRequest<ApiResponse<bool>>
     {
-        public RevokeTokenRequest Model { get; set; }
-        public RevokeTokenCommand(RevokeTokenRequest model)
-        {
-            Model = model;
-        }
+        public string Token { get; set; } = default!;   
     }
 }

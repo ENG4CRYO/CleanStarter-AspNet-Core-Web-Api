@@ -2,6 +2,7 @@
 using CleanStarter.api.Factories;
 using CleanStarter.api.Middlewares;
 using CleanStarter.API.Extensions;
+using CleanStarter.API.Helper.CustomCssScalar;
 using CleanStarter.Application.Common;
 using CleanStarter.Application.Extensions;
 using CleanStarter.Application.Helpers;
@@ -41,13 +42,14 @@ try
 
             document.Info.Contact = new OpenApiContact
             {
-                Name = "Mustafa"
+                Name = "Mustafa Aqeel"
             };
 
             return Task.CompletedTask;
         });
     });
     builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddOpenApiConfig(builder.Configuration);
 
     builder.Services.AddInfrastructureService(builder.Configuration);
     builder.Services.AddApplicationServices();
@@ -99,7 +101,13 @@ try
     app.UseResponseCompression();
 
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options.Theme = ScalarTheme.BluePlanet;
+        options.Layout = ScalarLayout.Modern;
+        options.WithTitle("CleanStarter API")
+               .WithCustomCss(CssScalar.GetCss());
+    });
     app.UseCors("AllowAll");
     
 

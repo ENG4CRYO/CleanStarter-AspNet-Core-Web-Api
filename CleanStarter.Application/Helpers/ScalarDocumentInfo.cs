@@ -5,56 +5,47 @@
         public static string GetScalarDocumentInfo()
         {
             string template = """
-                
-                # CleanStarter API Documentation
-
-                Welcome to the official API documentation for the **CleanStarter Enterprise Template**.  
-                This API is designed with scalability, security, and clean architecture principles in mind.
-
-                ---
+                Welcome to the official API documentation for the CleanStarter Enterprise Template.
 
                 ## 🔐 Authentication & Security Flow
-
-                The API follows a **stateless OTP-based flow** for sensitive operations:
-
-                1. `initiate-registration` / `forgot-password`  
-                   → Returns a `RegisterToken` or `ResetToken`.
-
-                2. The user receives a secure **One-Time Password (OTP)** via email.
-
-                3. `verify-registration` / `reset-password`  
-                 → Requires the Token + OTP to complete the process.
-
-                > ⚠️ Tokens are temporary and must be used within their validity period.
-
-                ---
+                This API uses a highly secure, Stateless OTP mechanism:
+                1. Call `initiate-registration` or `forgot-password` to receive a `Token`.
+                2. A secure OTP is sent to the user's email.
+                3. Call `verify-registration` or `reset-password` using the `Token` + `OTP` to complete the action.
 
                 ## 📌 Required Headers
+                Please include the following headers in your requests where applicable:
 
-                Include the following headers where applicable:
+                | Header Name | Value | Description | Required? |
+                | :--- | :--- | :----- | :--- |
+                | **Authorization** | `Bearer {token}` | JWT Token for secured endpoints. | Yes |
+                | **Accept-Language** | `en` or `ar` | Determines the localization of messages and errors. | Optional (Default: en) |
+                | **X-Api-Version** | `1.0` | Target API version. | Yes |
 
-                | Header Name        | Value              | Description                                      | Required |
-                |-------------------|-------------------|--------------------------------------------------|----------|
-                | Authorization     | Bearer {token}    | JWT token for secured endpoints                  | Yes      |
-                | Accept-Language   | en / ar           | Controls response language (default: en)          | Optional |
-                | X-Api-Version     | 1.0               | Specifies the target API version                 | Yes      |
+                ## ⚙️ General API Behavior
+                All endpoints return a unified JSON wrapper (`ApiResponse<T>`).
 
-                ---
-
-                 ## ⚙️ General API Behavior
-
-                ### 1. Standard Response Format
-
-                All endpoints return a unified response structure: `ApiResponse<T>`
-
-                #### ✅ Success Response
+                **✅ In Case of Success:**
                 ```json
                 {
                   "succeeded": true,
                   "message": "Operation completed successfully.",
                   "errors": {},
-                   "data": { }
+                  "data": { ... } 
                 }
+                ```
+
+                **❌ In Case of Failure (Validation Errors):**
+                ```json
+                {
+                  "succeeded": false,
+                  "message": "Validation Errors Occurred.",
+                  "errors": {
+                    "Email": [ "Invalid email format." ]
+                  },
+                  "data": null 
+                }
+                ```
                 """;
 
             return template;

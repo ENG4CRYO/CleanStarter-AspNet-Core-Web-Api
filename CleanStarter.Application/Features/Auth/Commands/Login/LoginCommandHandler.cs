@@ -40,9 +40,9 @@ namespace CleanStarter.Application.Features.Auth.Commands.Login
         {
             var user = await _userManager.Users
                 .Include(u => u.RefreshTokens)
-                .FirstOrDefaultAsync(u => u.Email == request.Model.Email, cancellationToken);
+                .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
-            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Model.Password))
+            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
             {
                 return ApiResponse<AuthModel>.Failure(_localizer["Auth.InvalidCredentials"]);
             }

@@ -1,4 +1,4 @@
-﻿using CleanStarter.Application.Validators;
+﻿using CleanStarter.Application.Validators.Auth;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,12 @@ namespace CleanStarter.Application.Features.Auth.Commands.Login
     {
         public LoginCommandValidator()
         {
-            RuleFor(x => x.Model).SetValidator(new LoginRequestValidator());
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email Is Required")
+                .EmailAddress().WithMessage("Invalid Email Format");
+
+                 RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password Is Required");
         }
     }
 }

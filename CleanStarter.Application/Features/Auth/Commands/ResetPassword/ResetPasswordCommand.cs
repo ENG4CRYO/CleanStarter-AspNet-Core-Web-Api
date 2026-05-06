@@ -9,10 +9,8 @@ namespace CleanStarter.Application.Features.Auth.Commands.ResetPassword
 {
     public class ResetPasswordCommand : IRequest<ApiResponse<bool>>
     {
-        public ResetPasswordRequest Model { get; set; }
-        public ResetPasswordCommand(ResetPasswordRequest model)
-        {
-            Model = model; 
-        }
+        public string ResetToken { get; set; } = string.Empty;
+        public string OtpCode { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
     }
 }

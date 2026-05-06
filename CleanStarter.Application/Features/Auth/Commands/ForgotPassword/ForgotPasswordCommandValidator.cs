@@ -1,13 +1,21 @@
-﻿using CleanStarter.Application.Validators;
+﻿using CleanStarter.Application.Resources;
+using CleanStarter.Application.Validators.Auth;
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 
 namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
 {
     public class ForgotPasswordCommandValidator : AbstractValidator<ForgotPasswordCommand>
     {
-        public ForgotPasswordCommandValidator()
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        public ForgotPasswordCommandValidator(IStringLocalizer<SharedResource> localizer)
         {
-            RuleFor(x => x.Model).SetValidator(new ForgotPasswordValidator());
+            _localizer = localizer;
+            RuleLevelCascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage(_localizer["Validator.Auth.EmailRequired"])
+                .EmailAddress().WithMessage(_localizer["Validator.Auth.InvalidEmailFormat"]);
         }
     }
 }

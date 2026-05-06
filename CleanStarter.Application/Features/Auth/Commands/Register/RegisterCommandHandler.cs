@@ -39,7 +39,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.Register
         {
             var authModel = new AuthModel { IsAuthenticated = false };
 
-            var existingUser = await _userManager.FindByEmailAsync(request.Model.Email);
+            var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser != null)
             {
                 var failedResponse = ApiResponse<AuthModel>.Failure(_localizer["Auth.EmailAlreadyRegistered"]);
@@ -47,9 +47,9 @@ namespace CleanStarter.Application.Features.Auth.Commands.Register
                 return failedResponse;
             }
 
-            var newUser = _mapper.Map<ApplicationUser>(request.Model);
+            var newUser = _mapper.Map<ApplicationUser>(request);
 
-            var result = await _userManager.CreateAsync(newUser, request.Model.Password);
+            var result = await _userManager.CreateAsync(newUser, request.Password);
             if (!result.Succeeded)
             {
                 var errorMessages = string.Join(" | ", result.Errors.Select(e => e.Description));

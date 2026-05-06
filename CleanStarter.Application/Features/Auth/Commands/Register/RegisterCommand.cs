@@ -10,11 +10,11 @@ namespace CleanStarter.Application.Features.Auth.Commands.Register
 {
     public class RegisterCommand : IRequest<ApiResponse<AuthModel>>
     {
-        public RegisterModel Model { get; set; }
+        public string FirstName { get; set; } = default!;
+        public string LastName { get; set; } = default!;
+        public string UserName { get; set; } = default!;
 
-        public RegisterCommand(RegisterModel model)
-        {
-            Model = model;
-        }
+        public string Email { get; set; } = default!;
+        public string Password { get; set; } = default!;
     }
 }

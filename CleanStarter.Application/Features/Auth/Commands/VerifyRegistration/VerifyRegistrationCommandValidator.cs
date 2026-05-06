@@ -1,5 +1,5 @@
 ﻿using CleanStarter.Application.Dtos.AuthModel;
-using CleanStarter.Application.Validators;
+using CleanStarter.Application.Validators.Auth;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,12 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
     {
         public VerifyRegistrationCommandValidator()
         {
-            RuleFor(x => x.Model).SetValidator(new VerifyRegistrationValidator());
+            RuleFor(x => x.RegisterToken)
+                .NotEmpty().WithMessage("Registration token is required.");
+
+            RuleFor(x => x.OtpCode)
+                .NotEmpty().WithMessage("OTP code is required.")
+                .Length(6).WithMessage("OTP code must be exactly 6 digits.");
         }
     }
 }

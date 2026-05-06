@@ -38,14 +38,14 @@ namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
 
         public async Task<ApiResponse<string>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Model.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
 
             var resetToken = Guid.NewGuid().ToString();
 
             if (user != null)
             {
                 string otpCode = string.Empty;
-                bool isTestEmail = request.Model.Email.Contains("@test.com");
+                bool isTestEmail = request.Email.Contains("@test.com");
                 if (isTestEmail)
                 {
                     otpCode = "123456";
@@ -76,7 +76,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
                     var emailBody = await _templateService.GetTemplateAsync("OtpEmail", emailPlaceholders);
 
  
-                    await _emailService.SendEmailAsync(request.Model.Email, "Your Secure OTP Code", emailBody, cancellationToken);
+                    await _emailService.SendEmailAsync(request.Email, "Your Secure OTP Code", emailBody, cancellationToken);
                 }
             }
 

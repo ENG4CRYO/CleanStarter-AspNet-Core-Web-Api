@@ -30,14 +30,14 @@ namespace CleanStarter.Application.Features.Auth.Commands.ResetPassword
 
         public async Task<ApiResponse<bool>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var cacheData = await _cacheService.GetAsync<ResetPasswordCacheDto>(request.Model.ResetToken, cancellationToken);
+            var cacheData = await _cacheService.GetAsync<ResetPasswordCacheDto>(request.ResetToken, cancellationToken);
 
             if (cacheData == null)
             {
                 return ApiResponse<bool>.Failure(_localizer["Auth.SessionExpiredOrInvalidToken"]);
             }
 
-            if (cacheData.OtpCode != request.Model.OtpCode)
+            if (cacheData.OtpCode != request.OtpCode)
             {
                 return ApiResponse<bool>.Failure(_localizer["Auth.InvalidOTP"]);
             }
@@ -47,14 +47,14 @@ namespace CleanStarter.Application.Features.Auth.Commands.ResetPassword
                 return ApiResponse<bool>.Failure(_localizer["Auth.UserNotFound"]);
             }
 
-            var isSameAsOldPassword = await _userManager.CheckPasswordAsync(user, request.Model.NewPassword);
+            var isSameAsOldPassword = await _userManager.CheckPasswordAsync(user, request.NewPassword);
             if (isSameAsOldPassword)
             {
                 return ApiResponse<bool>.Failure(_localizer["Auth.NewPasswordSameAsOld"]);
             }
 
             var identityResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetResult = await _userManager.ResetPasswordAsync(user, identityResetToken, request.Model.NewPassword);
+            var resetResult = await _userManager.ResetPasswordAsync(user, identityResetToken, request.NewPassword);
 
             if (!resetResult.Succeeded)
             {
@@ -62,7 +62,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.ResetPassword
                 return ApiResponse<bool>.Failure(_localizer["Aut.FailedResetPassword"]);
             }
 
-            await _cacheService.RemoveAsync(request.Model.ResetToken, cancellationToken);
+            await _cacheService.RemoveAsync(request.ResetToken, cancellationToken);
 
             return ApiResponse<bool>.Success(true, _localizer["Auth.PasswordResetSuccessfully"]);
         }

@@ -25,10 +25,9 @@ namespace CleanStarter.API.Controllers.V1
 
         #region Registration Flow (OTP Based)
         [HttpPost("initiate-registration")]
-        public async Task<IActionResult> InitiateRegistration([FromBody] InitiateRegistrationRequest request)
+        public async Task<IActionResult> InitiateRegistration([FromBody] InitiateRegistrationCommand request)
         {
-            var command = new InitiateRegistrationCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(request);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -37,10 +36,9 @@ namespace CleanStarter.API.Controllers.V1
         }
 
         [HttpPost("verify-registration")]
-        public async Task<IActionResult> VerifyRegistration([FromBody] VerifyRegistrationRequest request)
+        public async Task<IActionResult> VerifyRegistration([FromBody] VerifyRegistrationCommand request)
         {
-            var command = new VerifyRegistrationCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(request);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -54,10 +52,9 @@ namespace CleanStarter.API.Controllers.V1
         #region Login & Token Management
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginCommand request)
         {
-            var command = new LoginCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(request);
 
             if (!result.Succeeded)
                 return Unauthorized(result);
@@ -66,10 +63,9 @@ namespace CleanStarter.API.Controllers.V1
         }
 
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] RequestRefreshToken request)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand request)
         {
-            var command = new RefreshTokenCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(request);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -78,10 +74,9 @@ namespace CleanStarter.API.Controllers.V1
         }
 
         [HttpPost("revoke-token")]
-        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest request)
+        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenCommand request)
         {
-            var command = new RevokeTokenCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(request);
 
             if (!result.Succeeded)
                 return BadRequest(result);
@@ -94,19 +89,17 @@ namespace CleanStarter.API.Controllers.V1
         #region Password Management Flow
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request)
         {
-            var command = new ForgotPasswordCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(request);
 
             return Ok(result);
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand request)
         {
-            var command = new ResetPasswordCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(request);
 
             if (!result.Succeeded)
                 return BadRequest(result);

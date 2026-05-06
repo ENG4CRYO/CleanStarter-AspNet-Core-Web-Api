@@ -40,7 +40,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
 
         public async Task<ApiResponse<AuthModel>> Handle(VerifyRegistrationCommand request, CancellationToken cancellationToken)
         {
-            var pendingUser = await _cacheService.GetAsync<PendingRegistrationDto>(request.Model.RegisterToken, cancellationToken);
+            var pendingUser = await _cacheService.GetAsync<PendingRegistrationDto>(request.RegisterToken, cancellationToken);
 
           
             if (pendingUser == null)
@@ -48,7 +48,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
                 return ApiResponse<AuthModel>.Failure(_localizer["Auth.SessionExpiredOrInvalidToken"]);
             }
 
-            if (pendingUser.OtpCode != request.Model.OtpCode)
+            if (pendingUser.OtpCode != request.OtpCode)
             {
                 return ApiResponse<AuthModel>.Failure(_localizer["Auth.InvalidOTP"]);
             }
@@ -83,7 +83,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
             var jwtToken = _tokenHelper.CreateJwtToken(newUser, roles, claims);
 
             
-            await _cacheService.RemoveAsync(request.Model.RegisterToken, cancellationToken);
+            await _cacheService.RemoveAsync(request.RegisterToken, cancellationToken);
 
 
             var authModel = _mapper.Map<AuthModel>(newUser);
