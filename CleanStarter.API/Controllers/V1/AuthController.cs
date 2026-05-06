@@ -24,7 +24,6 @@ namespace CleanStarter.API.Controllers.V1
         }
 
         #region Registration Flow (OTP Based)
-
         [HttpPost("initiate-registration")]
         public async Task<IActionResult> InitiateRegistration([FromBody] InitiateRegistrationRequest request)
         {

@@ -4,10 +4,12 @@ using CleanStarter.Application.Dtos.AuthModel;
 using CleanStarter.Application.Helpers;
 using CleanStarter.Application.Interfaces.Common;
 using CleanStarter.Application.Interfaces.Helpers;
+using CleanStarter.Application.Resources;
 using CleanStarter.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -21,14 +23,17 @@ namespace CleanStarter.Application.Features.Auth.Commands.Login
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenHelper _tokenHelper;
         private readonly JWT _jwtOptions;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         public LoginCommandHandler(
             UserManager<ApplicationUser> userManager,
             ITokenHelper tokenHelper,
-            IOptions<JWT> jwtOptions)
-        {
+            IOptions<JWT> jwtOptions,
+            IStringLocalizer<SharedResource> localizer)
+        { 
             _userManager = userManager;
             _tokenHelper = tokenHelper;
             _jwtOptions = jwtOptions.Value;
+            _localizer = localizer;
         }
 
         public async Task<ApiResponse<AuthModel>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -39,7 +44,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.Login
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Model.Password))
             {
-                return ApiResponse<AuthModel>.Failure("Invalid Email or Password.");
+                return ApiResponse<AuthModel>.Failure(_localizer["Auth.InvalidCredentials"]);
             }
 
             user.ManageUserTokens(_jwtOptions.RefreshTokenValidityInDays);
@@ -59,6 +64,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.Login
             var authModel = new AuthModel
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                ExpiresOn = jwtSecurityToken.ValidTo,
                 RefreshToken = refreshToken.Token,
                 IsAuthenticated = true,
                 Email = user.Email,

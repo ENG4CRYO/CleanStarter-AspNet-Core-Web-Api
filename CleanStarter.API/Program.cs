@@ -4,9 +4,11 @@ using CleanStarter.api.Middlewares;
 using CleanStarter.API.Extensions;
 using CleanStarter.Application.Common;
 using CleanStarter.Application.Extensions;
+using CleanStarter.Application.Helpers;
 using CleanStarter.Infrastructure.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -26,7 +28,25 @@ try
     builder.Services.AddApiResponseCompression();
 
 
-    builder.Services.AddOpenApi();
+
+    builder.Services.AddOpenApi(options =>
+    {
+
+        options.AddDocumentTransformer((document, context, cancellationToken) =>
+        {
+            document.Info.Title = "CleanStarter API";
+            document.Info.Version = "v1";
+
+            document.Info.Description = ScalarDocumentInfo.GetScalarDocumentInfo();
+
+            document.Info.Contact = new OpenApiContact
+            {
+                Name = "Mustafa"
+            };
+
+            return Task.CompletedTask;
+        });
+    });
     builder.Services.AddEndpointsApiExplorer();
 
     builder.Services.AddInfrastructureService(builder.Configuration);
@@ -41,7 +61,7 @@ try
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     });
 
-    builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 
     var supportedCultures = new[] { "en", "ar" };
     var localizationOptions = new RequestLocalizationOptions()
@@ -78,17 +98,9 @@ try
 
     app.UseResponseCompression();
 
-    if (app.Environment.IsDevelopment()
-   && app.Configuration.GetValue<bool>("EnableScalar"))
-    {
-        app.MapOpenApi();
-        app.MapScalarApiReference();
-        app.UseCors("AllowAll");
-    }
-    else
-    {
-        app.UseCors("Production");
-    }
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+    app.UseCors("Production");
 
     var forwardedHeadersOptions = new ForwardedHeadersOptions
     {

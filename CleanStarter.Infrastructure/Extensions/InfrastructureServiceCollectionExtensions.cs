@@ -34,7 +34,8 @@ namespace CleanStarter.Infrastructure.Extensions
             }
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                 .AddEntityFrameworkStores<AppDbContext>();
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString,b =>
@@ -86,6 +87,8 @@ namespace CleanStarter.Infrastructure.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
                 };
             });;
+            services.AddTransient<ITemplateService, TemplateService>();
+
 
             return services;
         }

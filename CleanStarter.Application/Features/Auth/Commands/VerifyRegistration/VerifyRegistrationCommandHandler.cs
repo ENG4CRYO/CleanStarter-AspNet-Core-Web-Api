@@ -3,10 +3,12 @@ using CleanStarter.Application.Common;
 using CleanStarter.Application.Dtos.AuthModel;
 using CleanStarter.Application.Interfaces.Helpers;
 using CleanStarter.Application.Interfaces.Infrastructure;
+using CleanStarter.Application.Resources;
 using CleanStarter.Core.Constants;
 using CleanStarter.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading;
@@ -20,17 +22,20 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
         private readonly ICacheService _cacheService;
         private readonly ITokenHelper _tokenHelper;
         private readonly IMapper _mapper;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         public VerifyRegistrationCommandHandler(
             UserManager<ApplicationUser> userManager,
             ICacheService cacheService,
             ITokenHelper tokenHelper,
-            IMapper mapper)
+            IMapper mapper,
+            IStringLocalizer<SharedResource> localizer)
         {
             _userManager = userManager;
             _cacheService = cacheService;
             _tokenHelper = tokenHelper;
             _mapper = mapper;
+            _localizer = localizer;
         }
 
         public async Task<ApiResponse<AuthModel>> Handle(VerifyRegistrationCommand request, CancellationToken cancellationToken)
@@ -40,12 +45,12 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
           
             if (pendingUser == null)
             {
-                return ApiResponse<AuthModel>.Failure("Session expired or invalid token. Please register again.");
+                return ApiResponse<AuthModel>.Failure(_localizer["Auth.SessionExpiredOrInvalidToken"]);
             }
 
             if (pendingUser.OtpCode != request.Model.OtpCode)
             {
-                return ApiResponse<AuthModel>.Failure("Invalid OTP code.");
+                return ApiResponse<AuthModel>.Failure(_localizer["Auth.InvalidOTP"]);
             }
 
             var newUser = new ApplicationUser
@@ -63,7 +68,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
             if (!result.Succeeded)
             {
                 var errorMessages = string.Join(" | ", result.Errors.Select(e => e.Description));
-                return ApiResponse<AuthModel>.Failure($"Error occurred while creating account: {errorMessages}");
+                return ApiResponse<AuthModel>.Failure(_localizer["Auth.CreateUserFeiled"]);
             }
             await _userManager.AddToRoleAsync(newUser, AspRoles.User);
 
@@ -89,7 +94,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
             authModel.IsAuthenticated = true;
             authModel.Roles = roles.ToList();
 
-            return ApiResponse<AuthModel>.Success(authModel, "Account verified and created successfully.");
+            return ApiResponse<AuthModel>.Success(authModel, _localizer["Auth.UserRegisteredSuccessfully"]);
         }
     }
 }

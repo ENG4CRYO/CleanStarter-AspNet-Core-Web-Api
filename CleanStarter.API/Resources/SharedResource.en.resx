@@ -117,7 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SendOtp" xml:space="preserve">
-    <value>اذا كان ايميلك مسجل, سيصلك رمزا على الايميل</value>
+  <data name="Auth.EmailAlreadyRegistered" xml:space="preserve">
+    <value>Email is already registered</value>
+  </data>
+  <data name="Auth.ForgotPasswordSendOtp" xml:space="preserve">
+    <value>If your email is registered, you will receive an OTP shortly.</value>
+  </data>
+  <data name="Auth.RegisterSendOtp" xml:space="preserve">
+    <value>OTP has been sent to your email. Please verify.</value>
+  </data>
+  <data name="Auth.UserNameAlreadyTaken" xml:space="preserve">
+    <value>Username is already taken</value>
+  </data>
+  <data name="Auth.InvalidCredentials" xml:space="preserve">
+    <value>Invalid Email or Password</value>
+  </data>
+  <data name="Auth.LoginSuccessful" xml:space="preserve">
+    <value>Login Successful</value>
+  </data>
+  <data name="Auth.InvalidToken" xml:space="preserve">
+    <value>Invalid Token</value>
+  </data>
+  <data name="Auth.InactiveToken" xml:space="preserve">
+    <value>Token is inactive</value>
+  </data>
+  <data name="Auth.TokenRefreshedSuccessfully." xml:space="preserve">
+    <value>Token Refreshed Successfully</value>
+  </data>
+  <data name="Auth.CreateUserFeiled" xml:space="preserve">
+    <value>Error occurred while creating account</value>
+  </data>
+  <data name="Auth.UserRegisteredSuccessfully" xml:space="preserve">
+    <value>User registered successfully</value>
+  </data>
+  <data name="Auth.SessionExpiredOrInvalidToken" xml:space="preserve">
+    <value>Session expired or invalid token</value>
+  </data>
+  <data name="Auth.InvalidOTP" xml:space="preserve">
+    <value>Invalid OTP code</value>
+  </data>
+  <data name="Auth.UserNotFound" xml:space="preserve">
+    <value>User not found</value>
+  </data>
+  <data name="Auth.NewPasswordSameAsOld" xml:space="preserve">
+    <value>New password cannot be the same as the old password</value>
+  </data>
+  <data name="Auth.ResetPasswordFailed" xml:space="preserve">
+    <value>Failed to reset password</value>
+  </data>
+  <data name="Auth.PasswordResetSuccessfully" xml:space="preserve">
+    <value>Password has been reset successfully</value>
+  </data>
+  <data name="Auth.TokenRevokedSuccessfully" xml:space="preserve">
+    <value>Token revoked successfully</value>
   </data>
 </root>

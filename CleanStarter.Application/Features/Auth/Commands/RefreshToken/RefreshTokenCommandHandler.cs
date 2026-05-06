@@ -1,10 +1,12 @@
 ﻿using CleanStarter.Application.Common;
 using CleanStarter.Application.Dtos.AuthModel;
 using CleanStarter.Application.Interfaces.Helpers;
+using CleanStarter.Application.Resources;
 using CleanStarter.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -17,11 +19,15 @@ namespace CleanStarter.Application.Features.Auth.Commands.RefreshToken
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenHelper _tokenHelper;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public RefreshTokenCommandHandler(UserManager<ApplicationUser> userManager, ITokenHelper tokenHelper)
+        public RefreshTokenCommandHandler(UserManager<ApplicationUser> userManager,
+            ITokenHelper tokenHelper,
+            IStringLocalizer<SharedResource> localizer)
         {
             _userManager = userManager;
             _tokenHelper = tokenHelper;
+            _localizer = localizer;
         }
 
         public async Task<ApiResponse<AuthModel>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -34,14 +40,14 @@ namespace CleanStarter.Application.Features.Auth.Commands.RefreshToken
 
             if (user == null)
             {
-                return ApiResponse<AuthModel>.Failure("Invalid Token.");
+                return ApiResponse<AuthModel>.Failure(_localizer["Auth.InvalidToken"]);
             }
 
             var existingToken = user.RefreshTokens.Single(t => t.Token == tokenToRefresh);
 
             if (!existingToken.IsActive)
             {
-                return ApiResponse<AuthModel>.Failure("Token is inactive.");
+                return ApiResponse<AuthModel>.Failure(_localizer["Auth.InactiveToken"]);
             }
 
             existingToken.Revoked = DateTime.UtcNow.AddMinutes(1);
@@ -68,7 +74,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.RefreshToken
                 RefreshTokenExpiration = newRefreshToken.Expires
             };
 
-            return ApiResponse<AuthModel>.Success(authModel, "Token Refreshed Successfully.");
+            return ApiResponse<AuthModel>.Success(authModel, _localizer["Auth.TokenRefreshedSuccessfully."]);
         }
     }
 }

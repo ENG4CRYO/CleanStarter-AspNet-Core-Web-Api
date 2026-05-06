@@ -6,8 +6,10 @@ using CleanStarter.Application.Interfaces.Common;
 using CleanStarter.Application.Interfaces.Helpers;
 using CleanStarter.Application.Profiles;
 using CleanStarter.Application.Services;
+using CleanStarter.Core.Entities;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -30,12 +32,17 @@ namespace CleanStarter.Application.Extensions
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-            services.AddMediatR(cfg => {
+            services.AddMediatR(cfg =>
+            {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 
-  
+
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
+
+            services.AddLocalization();
+
+
 
 
             services.AddValidatorsFromAssembly(typeof(ApplicationServiceCollectionExtensions).Assembly);

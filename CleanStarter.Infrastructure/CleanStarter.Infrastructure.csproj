@@ -36,4 +36,10 @@
     <Folder Include="Cashing\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Templates\OtpEmail.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

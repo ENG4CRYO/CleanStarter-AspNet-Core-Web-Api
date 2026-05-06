@@ -117,7 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SendOtp" xml:space="preserve">
-    <value>اذا كان ايميلك مسجل, سيصلك رمزا على الايميل</value>
+  <data name="Auth.EmailAlreadyRegistered" xml:space="preserve">
+    <value>الايميل مسجل مسبقا</value>
+  </data>
+  <data name="Auth.ForgotPasswordSendOtp" xml:space="preserve">
+    <value>اذا كان ايميلك مسجل, سيصلك رمز التحقق على الايميل</value>
+  </data>
+  <data name="Auth.RegisterSendOtp" xml:space="preserve">
+    <value>تم إرسال رمز التحقق إلى بريدك الإلكتروني. يرجى التحقق</value>
+  </data>
+  <data name="Auth.UserNameAlreadyTaken" xml:space="preserve">
+    <value>اسم المستخدم مستخدم بالفعل</value>
+  </data>
+  <data name="Auth.InvalidCredentials" xml:space="preserve">
+    <value>الايميل او كلمة المرور غير صحيحة</value>
+  </data>
+  <data name="Auth.LoginSuccessful" xml:space="preserve">
+    <value>تم تسجيل الدخول بنجاح</value>
+  </data>
+  <data name="Auth.InvalidToken" xml:space="preserve">
+    <value>التوكن غير صالح</value>
+  </data>
+  <data name="Auth.InactiveToken" xml:space="preserve">
+    <value>التوكن غير نشط</value>
+  </data>
+  <data name="Auth.TokenRefreshedSuccessfully." xml:space="preserve">
+    <value>تم تحديث التوكن بنجاح</value>
+  </data>
+  <data name="Auth.CreateUserFeiled" xml:space="preserve">
+    <value>حدث خطأ اثناء انشاء الحساب</value>
+  </data>
+  <data name="Auth.UserRegisteredSuccessfully" xml:space="preserve">
+    <value>تم تسجيل المستخدم بنجاح</value>
+  </data>
+  <data name="Auth.SessionExpiredOrInvalidToken" xml:space="preserve">
+    <value>انتهت صلاحية الجلسة</value>
+  </data>
+  <data name="Auth.InvalidOTP" xml:space="preserve">
+    <value>رمز التحقق غير صحيح</value>
+  </data>
+  <data name="Auth.UserNotFound" xml:space="preserve">
+    <value>المستخدم غير موجود</value>
+  </data>
+  <data name="Auth.NewPasswordSameAsOld" xml:space="preserve">
+    <value>لا يمكن أن تكون كلمة المرور الجديدة هي نفسها كلمة المرور القديمة</value>
+  </data>
+  <data name="Auth.ResetPasswordFailed" xml:space="preserve">
+    <value>فشل اعادة تعيين كلمة المرور</value>
+  </data>
+  <data name="Auth.PasswordResetSuccessfully" xml:space="preserve">
+    <value>تم اعادة تعيين كلمة المرور بنجاح</value>
+  </data>
+  <data name="Auth.TokenRevokedSuccessfully" xml:space="preserve">
+    <value>تم تعطيل التوكن بنجاح</value>
   </data>
 </root>

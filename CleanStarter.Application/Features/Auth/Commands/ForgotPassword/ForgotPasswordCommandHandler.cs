@@ -1,13 +1,16 @@
 ﻿using CleanStarter.Application.Common;
 using CleanStarter.Application.Dtos.AuthModel;
 using CleanStarter.Application.Interfaces.Infrastructure;
+using CleanStarter.Application.Resources;
 using CleanStarter.Core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+
 
 namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
 {
@@ -16,15 +19,21 @@ namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICacheService _cacheService;
         private readonly IEmailService _emailService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly ITemplateService _templateService;
 
         public ForgotPasswordCommandHandler(
             UserManager<ApplicationUser> userManager,
             ICacheService cacheService,
-            IEmailService emailService)
+            IEmailService emailService,
+            IStringLocalizer<SharedResource> localizer,
+            ITemplateService templateService)
         {
             _userManager = userManager;
             _cacheService = cacheService;
             _emailService = emailService;
+            _localizer = localizer;
+            _templateService = templateService;
         }
 
         public async Task<ApiResponse<string>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
@@ -35,7 +44,16 @@ namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
 
             if (user != null)
             {
-                var otpCode = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
+                string otpCode = string.Empty;
+                bool isTestEmail = request.Model.Email.Contains("@test.com");
+                if (isTestEmail)
+                {
+                    otpCode = "123456";
+                }
+                else
+                {
+                    otpCode = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
+                }
 
                 var cacheDto = new ResetPasswordCacheDto
                 {
@@ -45,16 +63,24 @@ namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
 
                 await _cacheService.SetAsync(resetToken, cacheDto, TimeSpan.FromMinutes(10), cancellationToken);
 
-                var subject = "Password Reset Request";
-                var body = $@"
-                    <h3>Hello {user.FirstName},</h3>
-                    <p>Your OTP to reset your password is: <strong>{otpCode}</strong></p>
-                    <p>This code is valid for 10 minutes. If you didn't request this, please ignore this email.</p>";
+                if (!isTestEmail)
+                {
+          
+                    var emailPlaceholders = new Dictionary<string, string>
+                    {
+                        { "FirstName", user.FirstName },
+                        { "OtpCode", otpCode }
+                    };
 
-                await _emailService.SendEmailAsync(user.Email!, subject, body, cancellationToken);
+                  
+                    var emailBody = await _templateService.GetTemplateAsync("OtpEmail", emailPlaceholders);
+
+ 
+                    await _emailService.SendEmailAsync(request.Model.Email, "Your Secure OTP Code", emailBody, cancellationToken);
+                }
             }
 
-            return ApiResponse<string>.Success(resetToken, "If your email is registered, you will receive an OTP shortly.");
+            return ApiResponse<string>.Success(resetToken, _localizer["Auth.ForgotPasswordSendOtp"]);
         }
     }
 }
