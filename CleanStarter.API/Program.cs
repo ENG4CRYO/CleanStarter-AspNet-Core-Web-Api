@@ -100,7 +100,11 @@ try
 
     app.MapOpenApi();
     app.MapScalarApiReference();
+    app.UseCors("AllowAll");
+    
+
     app.UseCors("Production");
+    
 
     var forwardedHeadersOptions = new ForwardedHeadersOptions
     {
