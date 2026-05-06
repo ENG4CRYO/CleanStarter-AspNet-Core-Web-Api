@@ -171,4 +171,10 @@
   <data name="Auth.TokenRevokedSuccessfully" xml:space="preserve">
     <value>تم تعطيل التوكن بنجاح</value>
   </data>
+  <data name="Validator.Auth.EmailRequired" xml:space="preserve">
+    <value>الايميل مطلوب</value>
+  </data>
+  <data name="Validator.Auth.InvalidEmailFormat" xml:space="preserve">
+    <value>تنسيق الايميل غير صالح</value>
+  </data>
 </root>
