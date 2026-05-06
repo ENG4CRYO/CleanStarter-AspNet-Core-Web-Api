@@ -1,6 +1,8 @@
 ﻿using CleanStarter.Application.Dtos.AuthModel;
+using CleanStarter.Application.Resources;
 using CleanStarter.Application.Validators.Auth;
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,14 +11,16 @@ namespace CleanStarter.Application.Features.Auth.Commands.VerifyRegistration
 {
     public class VerifyRegistrationCommandValidator : AbstractValidator<VerifyRegistrationCommand>
     {
-        public VerifyRegistrationCommandValidator()
+        private readonly IStringLocalizer<SharedResource> _localizer;   
+        public VerifyRegistrationCommandValidator(IStringLocalizer<SharedResource> localizer)
         {
-            RuleFor(x => x.RegisterToken)
-                .NotEmpty().WithMessage("Registration token is required.");
+            _localizer = localizer;
+            RuleLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(x => x.OtpCode)
-                .NotEmpty().WithMessage("OTP code is required.")
-                .Length(6).WithMessage("OTP code must be exactly 6 digits.");
+            RuleFor(x => x.RegisterToken)
+                .NotEmpty().WithMessage(_localizer["Validation.Auth.RegisterTokenRequired"]);
+
+            RuleFor(x => x.OtpCode).NotEmpty().Length(6).WithMessage(_localizer["Validation.Auth.OTPRequired"]);
         }
     }
 }

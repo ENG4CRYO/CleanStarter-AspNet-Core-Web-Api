@@ -1,5 +1,7 @@
-﻿using CleanStarter.Application.Validators.Auth;
+﻿using CleanStarter.Application.Resources;
+using CleanStarter.Application.Validators.Auth;
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,27 +10,36 @@ namespace CleanStarter.Application.Features.Auth.Commands.Register
 {
     public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
     {
-        public RegisterCommandValidator()
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        public RegisterCommandValidator(IStringLocalizer<SharedResource> localizer)
         {
-            RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email Is Required")
-                .EmailAddress().WithMessage("Invalid Email Format");
-
-            RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Password Is Required")
-                .MinimumLength(6).WithMessage("The Password Must Be 6 Char Long As Minimum")
-                .Matches("[A-Z]").WithMessage("Must Be Conatain Capital Letter")
-                .Matches("[a-z]").WithMessage("Must Be Conatain Small Letter")
-                .Matches("[0-9]").WithMessage("Must Be Conatain Number")
-                .Matches(@"[\W_]").WithMessage("Must Be Contain A Special Character");
+            _localizer = localizer;
+            RuleLevelCascadeMode = CascadeMode.Stop;
 
             RuleFor(x => x.FirstName)
-                .NotEmpty().WithMessage("First Name Is Required")
-                .MaximumLength(50).WithMessage("Name Is Too Long");
+             .NotEmpty().WithMessage(_localizer["Validation.Auth.FirstNameRequired"])
+             .MaximumLength(50).WithMessage(_localizer["Validation.Auth.FirstNameMaxLength"]);
 
             RuleFor(x => x.LastName)
-                 .NotEmpty().WithMessage("Last Name Is Required")
-                 .MaximumLength(50).WithMessage("Name Is Too Long");
+                .NotEmpty().WithMessage(_localizer["Validation.Auth.LastNameRequired"])
+                .MaximumLength(50).WithMessage(_localizer["Validation.Auth.LastNameMaxLength"]);
+
+            RuleFor(x => x.UserName)
+                .NotEmpty().WithMessage(_localizer["Validation.Auth.UserNameRequired"])
+                .MinimumLength(3).WithMessage(_localizer["Validation.Auth.UserNameMinLength"])
+                .MaximumLength(15).WithMessage(_localizer["Validation.Auth.UserNameMaxLength"]);
+
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage(_localizer["Validation.Auth.EmailRequired"])
+                .EmailAddress().WithMessage(_localizer["Validation.Auth.InvalidEmailFormat"]);
+
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage(_localizer["Validation.Auth.PasswordRequired"])
+                .MinimumLength(6).WithMessage(_localizer["Validation.Auth.MinPasswordLength"])
+                .Matches("[A-Z]").WithMessage(_localizer["Validation.Auth.PasswordCapitalLetter"])
+                .Matches("[a-z]").WithMessage(_localizer["Validation.Auth.PasswordSmallLetter"])
+                .Matches("[0-9]").WithMessage(_localizer["Validation.Auth.PasswordConatainNumber"])
+                .Matches(@"[\W_]").WithMessage(_localizer["Must Be Contain A Special Character"]);
         }
     }
 }

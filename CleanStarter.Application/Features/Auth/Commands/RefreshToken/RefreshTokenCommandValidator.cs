@@ -1,14 +1,21 @@
-﻿using CleanStarter.Application.Validators.Auth;
+﻿using CleanStarter.Application.Resources;
+using CleanStarter.Application.Validators.Auth;
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 
 namespace CleanStarter.Application.Features.Auth.Commands.RefreshToken
 {
     public class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommand>
     {
-        public RefreshTokenCommandValidator()
+        private readonly IStringLocalizer<SharedResource> _localizer;
+
+        public RefreshTokenCommandValidator(IStringLocalizer<SharedResource> localizer)
         {
-            RuleFor(x => x.Token).NotNull().WithMessage("Refresh Token Cannot Be Null")
-            .NotEmpty().WithMessage("Refresh Token Canneot Be Empty");
+            _localizer = localizer;
+            RuleLevelCascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x.Token).NotNull().WithMessage(_localizer["Validation.Auth.RefreshTokenNull"])
+            .NotEmpty().WithMessage(_localizer["Validation.Auth.RefreshTokenEmpty"]);
         }
     }
 }

@@ -117,7 +117,124 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SendOtp" xml:space="preserve">
-    <value>اذا كان ايميلك مسجل, سيصلك رمزا على الايميل</value>
+  <data name="Auth.EmailAlreadyRegistered" xml:space="preserve">
+    <value>الايميل مسجل مسبقا</value>
+  </data>
+  <data name="Auth.ForgotPasswordSendOtp" xml:space="preserve">
+    <value>اذا كان ايميلك مسجل, سيصلك رمز التحقق على الايميل</value>
+  </data>
+  <data name="Auth.RegisterSendOtp" xml:space="preserve">
+    <value>تم إرسال رمز التحقق إلى بريدك الإلكتروني. يرجى التحقق</value>
+  </data>
+  <data name="Auth.UserNameAlreadyTaken" xml:space="preserve">
+    <value>اسم المستخدم مستخدم بالفعل</value>
+  </data>
+  <data name="Auth.InvalidCredentials" xml:space="preserve">
+    <value>الايميل او كلمة المرور غير صحيحة</value>
+  </data>
+  <data name="Auth.LoginSuccessful" xml:space="preserve">
+    <value>تم تسجيل الدخول بنجاح</value>
+  </data>
+  <data name="Auth.InvalidToken" xml:space="preserve">
+    <value>التوكن غير صالح</value>
+  </data>
+  <data name="Auth.InactiveToken" xml:space="preserve">
+    <value>التوكن غير نشط</value>
+  </data>
+  <data name="Auth.TokenRefreshedSuccessfully." xml:space="preserve">
+    <value>تم تحديث التوكن بنجاح</value>
+  </data>
+  <data name="Auth.CreateUserFeiled" xml:space="preserve">
+    <value>حدث خطأ اثناء انشاء الحساب</value>
+  </data>
+  <data name="Auth.UserRegisteredSuccessfully" xml:space="preserve">
+    <value>تم تسجيل المستخدم بنجاح</value>
+  </data>
+  <data name="Auth.SessionExpiredOrInvalidToken" xml:space="preserve">
+    <value>انتهت صلاحية الجلسة</value>
+  </data>
+  <data name="Auth.InvalidOTP" xml:space="preserve">
+    <value>رمز التحقق غير صحيح</value>
+  </data>
+  <data name="Auth.UserNotFound" xml:space="preserve">
+    <value>المستخدم غير موجود</value>
+  </data>
+  <data name="Auth.NewPasswordSameAsOld" xml:space="preserve">
+    <value>لا يمكن أن تكون كلمة المرور الجديدة هي نفسها كلمة المرور القديمة</value>
+  </data>
+  <data name="Auth.ResetPasswordFailed" xml:space="preserve">
+    <value>فشل اعادة تعيين كلمة المرور</value>
+  </data>
+  <data name="Auth.PasswordResetSuccessfully" xml:space="preserve">
+    <value>تم اعادة تعيين كلمة المرور بنجاح</value>
+  </data>
+  <data name="Auth.TokenRevokedSuccessfully" xml:space="preserve">
+    <value>تم تعطيل التوكن بنجاح</value>
+  </data>
+  <data name="Validation.Auth.EmailRequired" xml:space="preserve">
+    <value>الايميل مطلوب</value>
+  </data>
+  <data name="Validation.Auth.InvalidEmailFormat" xml:space="preserve">
+    <value>تنسيق الايميل غير صحيح</value>
+  </data>
+  <data name="Validation.Auth.FirstNameRequired" xml:space="preserve">
+    <value>الاسم الاول مطلوب</value>
+  </data>
+  <data name="Validation.Auth.FirstNameMaxLength" xml:space="preserve">
+    <value>الاسم الاول لايمكن ان يتعدى 50 حرفا</value>
+  </data>
+  <data name="Validation.Auth.LastNameRequired" xml:space="preserve">
+    <value>الاسم الاخير مطلوب</value>
+  </data>
+  <data name="Validation.Auth.LastNameMaxLength" xml:space="preserve">
+    <value>الاسم الاخير لايمكن ان يتعدى 50 حرفا</value>
+  </data>
+  <data name="Validation.Auth.UserNameRequired" xml:space="preserve">
+    <value>اسم المستخدم مطلوب</value>
+  </data>
+  <data name="Validation.Auth.UserNameMinLength" xml:space="preserve">
+    <value>اسم المستخدم على الاقل 3 احرف</value>
+  </data>
+  <data name="Validation.Auth.UserNameMaxLength" xml:space="preserve">
+    <value>اسم المستخدم لا يمكن ان يتعدى 15 حرف</value>
+  </data>
+  <data name="Validation.Auth.PasswordRequired" xml:space="preserve">
+    <value>كلمة المرور مطلوبة</value>
+  </data>
+  <data name="Validation.Auth.MinPasswordLength" xml:space="preserve">
+    <value>يجب ان يكون 6 احرف على الاقل</value>
+  </data>
+  <data name="Validation.Auth.PasswordCapitalLetter" xml:space="preserve">
+    <value>يجب ان يحتوي على الاقل حرف كبير</value>
+  </data>
+  <data name="Validation.Auth.PasswordSmallLetter" xml:space="preserve">
+    <value>يجب ان يحتوي على الاقل حرف صغير</value>
+  </data>
+  <data name="Validation.Auth.PasswordConatainNumber" xml:space="preserve">
+    <value>يجب ان يحتوي على رقم</value>
+  </data>
+  <data name="Validation.Auth.PasswordSpecialCharacter" xml:space="preserve">
+    <value>يجب ان يحتوي على حرف مميز</value>
+  </data>
+  <data name="Validation.Auth.RefreshTokenNull" xml:space="preserve">
+    <value>توكن التحديث لايمكن ان يكون بدون قيمة</value>
+  </data>
+  <data name="Validation.Auth.RefreshTokenEmpty" xml:space="preserve">
+    <value>توكن التحديث لايمكن ان يكون فارغا</value>
+  </data>
+  <data name="Validation.Auth.ResetTokenRequired" xml:space="preserve">
+    <value>توكن اعادة التعيين مطلوب</value>
+  </data>
+  <data name="Validation.Auth.OTPRequired" xml:space="preserve">
+    <value>رمز التحقق مطلوب</value>
+  </data>
+  <data name="Validation.Auth.TokenNull" xml:space="preserve">
+    <value>التوكن لا يمكن ان يكون بلا قيمة</value>
+  </data>
+  <data name="Validation.Auth.TokenEmpty" xml:space="preserve">
+    <value>التوكن لا يمكن ان يكون فارغا</value>
+  </data>
+  <data name="Validation.Auth.RegisterTokenRequired" xml:space="preserve">
+    <value>توكن التسجيل مطلوب</value>
   </data>
 </root>

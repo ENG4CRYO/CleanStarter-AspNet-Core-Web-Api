@@ -43,7 +43,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.InitiateRegistration
                 return ApiResponse<string>.Failure(_localizer["Auth.EmailAlreadyRegistered"]);
             }
 
-            var existingUsername = await _userManager.FindByNameAsync(request.Username);
+            var existingUsername = await _userManager.FindByNameAsync(request.UserName);
             if (existingUsername != null)
             {
                 return ApiResponse<string>.Failure(_localizer["Auth.UserNameAlreadyTaken"]);
@@ -68,7 +68,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.InitiateRegistration
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
-                Username = request.Username,
+                Username = request.UserName,
                 PasswordHash = passwordHash,
                 OtpCode = otpCode
             };

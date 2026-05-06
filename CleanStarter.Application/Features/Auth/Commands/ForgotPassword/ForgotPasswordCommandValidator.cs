@@ -14,8 +14,8 @@ namespace CleanStarter.Application.Features.Auth.Commands.ForgotPassword
             RuleLevelCascadeMode = CascadeMode.Stop;
 
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage(_localizer["Validator.Auth.EmailRequired"])
-                .EmailAddress().WithMessage(_localizer["Validator.Auth.InvalidEmailFormat"]);
+                .NotEmpty().WithMessage(_localizer["Validation.Auth.EmailRequired"])
+                .EmailAddress().WithMessage(_localizer["Validation.Auth.InvalidEmailFormat"]);
         }
     }
 }

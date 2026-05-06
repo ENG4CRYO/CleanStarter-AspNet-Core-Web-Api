@@ -117,7 +117,124 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SendOtp" xml:space="preserve">
+  <data name="Auth.EmailAlreadyRegistered" xml:space="preserve">
+    <value>Email is already registered</value>
+  </data>
+  <data name="Auth.ForgotPasswordSendOtp" xml:space="preserve">
     <value>If your email is registered, you will receive an OTP shortly.</value>
+  </data>
+  <data name="Auth.RegisterSendOtp" xml:space="preserve">
+    <value>OTP has been sent to your email. Please verify.</value>
+  </data>
+  <data name="Auth.UserNameAlreadyTaken" xml:space="preserve">
+    <value>Username is already taken</value>
+  </data>
+  <data name="Auth.InvalidCredentials" xml:space="preserve">
+    <value>Invalid Email or Password</value>
+  </data>
+  <data name="Auth.LoginSuccessful" xml:space="preserve">
+    <value>Login Successful</value>
+  </data>
+  <data name="Auth.InvalidToken" xml:space="preserve">
+    <value>Invalid Token</value>
+  </data>
+  <data name="Auth.InactiveToken" xml:space="preserve">
+    <value>Token is inactive</value>
+  </data>
+  <data name="Auth.TokenRefreshedSuccessfully." xml:space="preserve">
+    <value>Token Refreshed Successfully</value>
+  </data>
+  <data name="Auth.CreateUserFeiled" xml:space="preserve">
+    <value>Error occurred while creating account</value>
+  </data>
+  <data name="Auth.UserRegisteredSuccessfully" xml:space="preserve">
+    <value>User registered successfully</value>
+  </data>
+  <data name="Auth.SessionExpiredOrInvalidToken" xml:space="preserve">
+    <value>Session expired or invalid token</value>
+  </data>
+  <data name="Auth.InvalidOTP" xml:space="preserve">
+    <value>Invalid OTP code</value>
+  </data>
+  <data name="Auth.UserNotFound" xml:space="preserve">
+    <value>User not found</value>
+  </data>
+  <data name="Auth.NewPasswordSameAsOld" xml:space="preserve">
+    <value>New password cannot be the same as the old password</value>
+  </data>
+  <data name="Auth.ResetPasswordFailed" xml:space="preserve">
+    <value>Failed to reset password</value>
+  </data>
+  <data name="Auth.PasswordResetSuccessfully" xml:space="preserve">
+    <value>Password has been reset successfully</value>
+  </data>
+  <data name="Auth.TokenRevokedSuccessfully" xml:space="preserve">
+    <value>Token revoked successfully</value>
+  </data>
+  <data name="Validation.Auth.EmailRequired" xml:space="preserve">
+    <value>Email is required</value>
+  </data>
+  <data name="Validation.Auth.InvalidEmailFormat" xml:space="preserve">
+    <value>Invalid Email Format</value>
+  </data>
+  <data name="Validation.Auth.FirstNameRequired" xml:space="preserve">
+    <value>First Name is required</value>
+  </data>
+  <data name="Validation.Auth.FirstNameMaxLength" xml:space="preserve">
+    <value>First name cannot exceed 50 characters</value>
+  </data>
+  <data name="Validation.Auth.LastNameRequired" xml:space="preserve">
+    <value>Last name is required</value>
+  </data>
+  <data name="Validation.Auth.LastNameMaxLength" xml:space="preserve">
+    <value>Last name cannot exceed 50 characters</value>
+  </data>
+  <data name="Validation.Auth.UserNameRequired" xml:space="preserve">
+    <value>Username is required</value>
+  </data>
+  <data name="Validation.Auth.UserNameMinLength" xml:space="preserve">
+    <value>Username must be at least 3 characters</value>
+  </data>
+  <data name="Validation.Auth.UserNameMaxLength" xml:space="preserve">
+    <value>Username cannot exceed 15 characters</value>
+  </data>
+  <data name="Validation.Auth.PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="Validation.Auth.MinPasswordLength" xml:space="preserve">
+    <value>Must Be 6 Character Long As Minimum</value>
+  </data>
+  <data name="Validation.Auth.PasswordCapitalLetter" xml:space="preserve">
+    <value>Must Be Conatain Capital Letter</value>
+  </data>
+  <data name="Validation.Auth.PasswordSmallLetter" xml:space="preserve">
+    <value>Must Be Conatain Small Letter</value>
+  </data>
+  <data name="Validation.Auth.PasswordConatainNumber" xml:space="preserve">
+    <value>Must Be Conatain Number</value>
+  </data>
+  <data name="Validation.Auth.PasswordSpecialCharacter" xml:space="preserve">
+    <value>Must Be Contain A Special Character</value>
+  </data>
+  <data name="Validation.Auth.RefreshTokenNull" xml:space="preserve">
+    <value>Refresh Token Cannot Be Null</value>
+  </data>
+  <data name="Validation.Auth.RefreshTokenEmpty" xml:space="preserve">
+    <value>Refresh Token Canneot Be Empty</value>
+  </data>
+  <data name="Validation.Auth.ResetTokenRequired" xml:space="preserve">
+    <value>Reset token is required</value>
+  </data>
+  <data name="Validation.Auth.OTPRequired" xml:space="preserve">
+    <value>OTP is required</value>
+  </data>
+  <data name="Validation.Auth.TokenNull" xml:space="preserve">
+    <value>Token Cannot Be Null</value>
+  </data>
+  <data name="Validation.Auth.TokenEmpty" xml:space="preserve">
+    <value>Token Canneot Be Empty</value>
+  </data>
+  <data name="Validation.Auth.RegisterTokenRequired" xml:space="preserve">
+    <value>Register token is required</value>
   </data>
 </root>
