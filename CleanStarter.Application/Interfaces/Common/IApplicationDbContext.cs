@@ -7,12 +7,10 @@ using System.Text;
 
 namespace CleanStarter.Application.Interfaces.Common
 {
-#if IsCQRS
     public interface IApplicationDbContext
     {
         DbSet<ApplicationUser> Users { get; }
         DbSet<RefreshToken> RefreshTokens { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
-#endif
 }

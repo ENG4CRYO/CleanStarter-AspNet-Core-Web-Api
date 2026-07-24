@@ -34,6 +34,7 @@ namespace CleanStarter.Application.Features.Auth.Commands.Register
                 .EmailAddress().WithMessage(_localizer["Validation.Auth.InvalidEmailFormat"]);
 
             RuleFor(x => x.Password)
+                .Cascade(CascadeMode.Continue)
                 .NotEmpty().WithMessage(_localizer["Validation.Auth.PasswordRequired"])
                 .MinimumLength(6).WithMessage(_localizer["Validation.Auth.MinPasswordLength"])
                 .Matches("[A-Z]").WithMessage(_localizer["Validation.Auth.PasswordCapitalLetter"])
